@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <title>Arttwork</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="static/assets/css/style.css">
+  <link rel="stylesheet" href="static/assets/scss/style.scss">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">
+<link rel="stylesheet" href="/static/styles.css"></head>
+
+<body>
+  <app-root></app-root>
+<script src="/static/runtime.js" type="module"></script><script src="/static/polyfills.js" type="module"></script><script src="/static/main.js" type="module"></script></body>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="static/assets/js/flickity.pkgd.min.js"></script>
+<script type="text/javascript">
+  var stripe = Stripe('pk_test_K2qK4YNo16phDVS4OO5rfryF00mvsrEzmD'); // use your test publishable key
+  var elements = stripe.elements();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+<script>
+  var currentUser = JSON.parse(localStorage.getItem('user_token'));
+  var endpoint = 'ws://'+ '127.0.0.1:8000' + '/notifications/'+ currentUser.token;
+  var socket = new ReconnectingWebSocket(endpoint);
+  socket.onmessage = function (e) {
+      console.log('onmessage',JSON.parse(e.data))
+  };
+  socket.onopen = function (e) {
+      console.log('open',e)
+  };
+  socket.onerror = function (e) {
+      console.log('onerror',e)
+  };
+  socket.onclose = function (e) {
+      console.log('onclose',e)
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
+
+</html>
