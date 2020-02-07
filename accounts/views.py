@@ -15,6 +15,7 @@ from rest_framework.exceptions import ValidationError
 from payments.models import PaymentMethod
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from django.conf import settings
 
 
 class Signup(viewsets.ViewSet):
@@ -74,19 +75,25 @@ class Login(viewsets.ViewSet):
     permission_classes = (AllowAny,)
     http_method_names = ['post', ]
 
+    LOGIN_WITH_EMAIL = 0
+    LOGIN_WITH_FACEBOOK = 1
+    LOGIN_WITH_TWITTER = 2
+    LOGIN_WITH_GOOGLE = 3
+
     def create(self, request, *args, **kwargs):
         email = request.data.get('email').lower()
         print(email)
 
         # verify google idToken in the case of social login
-        is_social_login = request.data.get('isSocial')
-        if is_social_login:
+        login_type = request.data.get('type')
+        if login_type is self.LOGIN_WITH_GOOGLE:
+            print('login with google account')
             google_request = requests.Request()
             token = request.data.get('idToken')
             try:
                 id_info = id_token.verify_oauth2_token(token,
                                                        google_request,
-                                                       '465669180733-qn10t5c2ebud38t9lmfvcrifsbokhs0v.apps.googleusercontent.com')
+                                                       settings.GOOGLE_CLIENT_ID)
             except ValueError:
                 result = {'status': 'error', 'message': 'Invalid social user', 'code': -1001}
                 return Response(result, status=401)
@@ -101,15 +108,15 @@ class Login(viewsets.ViewSet):
             form_data = {'username': user.username, 'password': request.data.get('password')}
         except User.DoesNotExist:
             # if login is not via social, return error
-            if is_social_login is False:
+            if login_type is self.LOGIN_WITH_EMAIL:
                 result = {'status': 'error', 'message': 'User does not exist', 'code': -1002}
                 return Response(result, status=401)
             # redirect signup page
             result = {'status': 'error', 'message': 'Social user should complete their profile', 'code': -1003}
-            return Response(result)
+            return Response(result, status=401)
 
         # check password
-        if is_social_login is False:
+        if login_type is self.LOGIN_WITH_EMAIL:
             form = AuthenticationForm(data=form_data)
             if form.is_valid():
                 user = form.get_user()

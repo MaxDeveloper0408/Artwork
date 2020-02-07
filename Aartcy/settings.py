@@ -19,11 +19,10 @@ root = environ.Path(__file__)
 env = environ.Env()
 environ.Env.read_env(env_file='.env')
 
-#CLIENT_URL = env.str('CLIENT_URL')
+# CLIENT_URL = env.str('CLIENT_URL')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -71,7 +70,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Aartcy.urls'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -90,7 +88,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Aartcy.wsgi.application'
-ASGI_APPLICATION = "sockets.routing.application" # Socket Server
+ASGI_APPLICATION = "sockets.routing.application"  # Socket Server
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -130,7 +128,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -144,8 +141,7 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
-#Django Rest Settings
+# Django Rest Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
@@ -156,7 +152,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-#Email Settings
+# Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
@@ -164,7 +160,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 
-#Stripe Settings
+# Stripe Settings
 STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = env.str('STRIPE_PUBLISHABLE_KEY')
 STRIPE_CLIENT_ID = env.str('STRIPE_CLIENT_ID')
@@ -182,3 +178,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# SOCIAL APP
+GOOGLE_CLIENT_ID = env.str('GOOGLE_CLIENT_ID')
