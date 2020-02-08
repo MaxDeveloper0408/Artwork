@@ -6,6 +6,11 @@ from email.mime.multipart import MIMEMultipart
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+
 
 def TEXT(token):
     return f'{HOST}/api/accounts/activate/{token}'
@@ -23,18 +28,18 @@ def ResetHTML(token):
     return f'<h5><a href="{HOST}/reset-password/{token}">Click here to reset yourpassword</a></h5>'
 
 
-def SendEmail(to, subject, token, activation=True):
+def send_email(to, subject, token, activation=True):
     if activation:
         text = TEXT(token)
         html = HTML(token)
     else:
         text = ResetTEXT(token)
         html = ResetHTML(token)
-
-    from_email = EMAIL_FROM
-    msg = EmailMultiAlternatives(subject, text, from_email, [to])
-    msg.attach_alternative(html, "text/html")
-    msg.send()
+    #
+    # from_email = EMAIL_FROM
+    # msg = EmailMultiAlternatives(subject, text, from_email, [to])
+    # msg.attach_alternative(html, "text/html")
+    # msg.send()
 
     # return requests.post(
     #     "https://api.mailgun.net/v3/"+config.MAIL_GUN_DOMAIN+"/messages",   # domain url + /messages
@@ -44,6 +49,27 @@ def SendEmail(to, subject, token, activation=True):
     #           "subject": subject,
     #           "text": text,
     #           "html": html})
+
+    message = Mail(
+        from_email=EMAIL_FROM,
+        to_emails=to,
+        subject=subject,
+        html_content=html)
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+
+        print("Response status code: " + response.status_code)
+        if response.status_code == 202:
+            return True
+        else:
+            return False
+
+        # print(response.body)
+        # print(response.headers)
+    except Exception as e:
+        print(e.message)
+        return False
 
 
 def send_buy_link(to, subject, link):

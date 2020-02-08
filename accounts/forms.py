@@ -1,16 +1,16 @@
 from django import forms
-from django.contrib.auth.forms import  UserCreationForm,AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-class SignupForm(UserCreationForm):
 
+class SignupForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
         if User.objects.filter(email=email).exists():
-            raise ValidationError("A user with that email already exists.",code="unique")
+            raise ValidationError("A user with that email already exists.", code="unique")
         return email
 
     def save(self, commit=True):
@@ -21,5 +21,3 @@ class SignupForm(UserCreationForm):
         if commit:
             user.save()
         return user
-
-

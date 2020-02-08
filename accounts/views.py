@@ -46,14 +46,14 @@ class Signup(viewsets.ViewSet):
                 Profile.objects.filter(user_id=obj.id).update(role=form_data['role'],
                                                               activation_secret=activation_secret)
 
-                token = auth.makeJWT(form_data['username'], activation_secret)
+                token = auth.make_jwt(form_data['username'], activation_secret)
                 method = PaymentMethod.objects.filter(user_id=obj.id).first()
                 if method:
                     is_stripe_connected = True
                 else:
                     is_stripe_connected = False
 
-                SendEmail(form_data['email'], EMAIL_ACTIVATION_SUB, token)
+                send_email(form_data['email'], EMAIL_ACTIVATION_SUB, token)
                 token, created = Token.objects.get_or_create(user=obj)
                 data = {'status': True, 'token': token.key,
                         "verified": obj.profile.is_verified, "is_profile_complete": False,
@@ -223,8 +223,8 @@ class ForgotPassword(viewsets.ViewSet):
 
         if user:
             secret = user.profile.update_secret
-            token = auth.makeJWT(user.username, secret)
-            SendEmail(user.email, 'Forgot Password', token, activation=False)
+            token = auth.make_jwt(user.username, secret)
+            send_email(user.email, 'Forgot Password', token, activation=False)
             return Response({'message': 'Please check your email.'})
 
         return Response({'error': error}, status=401)
