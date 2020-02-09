@@ -25,6 +25,8 @@ class Profile(BaseModel):
     primary_address = models.ForeignKey('Address', on_delete=models.SET_NULL, blank=True, null=True)
     platform_fees = models.IntegerField(blank=True, null=True)
     image = models.ImageField(upload_to='profiles', default='profiles/avatar.png')
+    social_id = models.CharField(max_length=256, blank=True, null=True)
+    social_type = models.SmallIntegerField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.user.username}, {self.role}'
