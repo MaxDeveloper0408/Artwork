@@ -88,6 +88,7 @@ class Login(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
         global resource_owner_key
         global resource_owner_secret
+
         email = ''
         login_type = request.data.get('type')
         if login_type is not self.LOGIN_WITH_TWITTER:
@@ -109,8 +110,9 @@ class Login(viewsets.ViewSet):
             if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
                 result = {'status': 'error', 'message': 'Invalid social network issuer', 'code': -1001}
                 return Response(result, status=401)
+            social_id = request.data.get('id')
 
-        # get email address from twitter user's credential
+        # get id from twitter user's credential
         if login_type is self.LOGIN_WITH_TWITTER:
             print('login with twitter account')
             token = request.data.get('token')
@@ -133,26 +135,33 @@ class Login(viewsets.ViewSet):
                                   client_secret=client_secret,
                                   resource_owner_key=resource_owner_key,
                                   resource_owner_secret=resource_owner_secret)
-            params = {"include_email": 'true'}
-            credential = oauth.get(credential_url, params).json()
-            email = credential.email
-            if email is None or '':
-                return Response({'status': 'error', 'message': 'Invalid twitter user email', 'code': -1005})
+            params = {'include_email': 'true'}
+            credential = oauth.get(credential_url, params=params).json()
+            social_id = credential['id']
+            if social_id is None or '':
+                return Response({'status': 'error', 'message': 'Invalid twitter user', 'code': -1005})
 
-        print(email)
-
-        # check if the user exists
+        # check if the user exists, for login user via email, find the user by email
+        # for social login user, find the user by social_id
         try:
-            user = User.objects.get(email=email)
-            form_data = {'username': user.username, 'password': request.data.get('password')}
+            if login_type is LOGIN_WITH_EMAIL:
+                user = User.objects.get(email=email)
+                form_data = {'username': user.username, 'password': request.data.get('password')}
+            else:
+                profiles = Profile.objects.filter(social_id=social_id, social_type=login_type).values('user_id')
+                if profiles.count() is not 1:
+                    # redirect signup page
+                    result = {'status': 'error', 'message': 'Social user should complete their profile', 'code': -1003}
+                    return Response(result, status=401)
+                else:
+                    user_id = profiles[0]['user_id']
+                    user = User.objects.get(pk=user_id)
+
         except User.DoesNotExist:
             # if login is not via social, return error
             if login_type is self.LOGIN_WITH_EMAIL:
                 result = {'status': 'error', 'message': 'User does not exist', 'code': -1002}
                 return Response(result, status=401)
-            # redirect signup page
-            result = {'status': 'error', 'message': 'Social user should complete their profile', 'code': -1003}
-            return Response(result, status=401)
 
         # check password
         if login_type is self.LOGIN_WITH_EMAIL:
