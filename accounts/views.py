@@ -111,10 +111,9 @@ class Login(viewsets.ViewSet):
         # get email address from twitter user's credential
         if login_type is self.LOGIN_WITH_TWITTER:
             print('login with twitter account')
-            redirect_response = request.data.get('redirect_response')
-            token = redirect_response.token
+            token = request.data.get('token')
             # might be needed to check if token is equal to the resource_owner_key of login_url()
-            verifier = redirect_response.verifier
+            verifier = request.data.get('verifier')
             client_key = settings.TWITTER_CONSUMER_API_KEY
             client_secret = settings.TWITTER_CONSUMER_API_SEC_KEY
             access_token_url = 'https://api.twitter.com/oauth/access_token'

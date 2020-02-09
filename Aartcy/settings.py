@@ -113,7 +113,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-CORS_ORIGIN_WHITELIST = env.tuple('CORS_ORIGIN_WHITELIST')
+# CORS_ORIGIN_WHITELIST = env.tuple('CORS_ORIGIN_WHITELIST')
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200"
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
