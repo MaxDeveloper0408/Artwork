@@ -14,5 +14,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('activate/<secret>', views.activate, name='activate'),
     path('reset-password/<secret>', views.ResetPassword.as_view(), name='reset_password'),
-    path('twitter/login-url', views.Login.as_view({'get': 'login_url'})),
+    path('twitter/login-url', views.twitter_login_url),
 ]

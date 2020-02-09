@@ -2,6 +2,7 @@ from . import auth
 from .mailers import *
 from .serializers import *
 from rest_framework import viewsets
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.decorators import action
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
@@ -17,6 +18,9 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.conf import settings
 from requests_oauthlib import OAuth1Session
+
+resource_owner_key = ''
+resource_owner_secret = ''
 
 
 class Signup(viewsets.ViewSet):
@@ -81,11 +85,7 @@ class Login(viewsets.ViewSet):
     LOGIN_WITH_TWITTER = 2
     LOGIN_WITH_GOOGLE = 3
 
-    resource_owner_key = ''
-    resource_owner_secret = ''
-
     def create(self, request, *args, **kwargs):
-
         email = ''
         login_type = request.data.get('type')
         if login_type is not self.LOGIN_WITH_TWITTER:
@@ -120,18 +120,18 @@ class Login(viewsets.ViewSet):
             access_token_url = 'https://api.twitter.com/oauth/access_token'
             oauth = OAuth1Session(client_key,
                                   client_secret=client_secret,
-                                  resource_owner_key=self.resource_owner_key,
-                                  resource_owner_secret=self.resource_owner_secret,
+                                  resource_owner_key=this.resource_owner_key,
+                                  resource_owner_secret=this.resource_owner_secret,
                                   verifier=verifier)
             oauth_tokens = oauth.fetch_access_token(access_token_url)
-            self.resource_owner_key = oauth_tokens.get('oauth_token')
-            self.resource_owner_secret = oauth_tokens.get('oauth_token_secret')
+            this.resource_owner_key = oauth_tokens.get('oauth_token')
+            this.resource_owner_secret = oauth_tokens.get('oauth_token_secret')
             # get access user profile
             credential_url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
             oauth = OAuth1Session(client_key,
                                   client_secret=client_secret,
-                                  resource_owner_key=self.resource_owner_key,
-                                  resource_owner_secret=self.resource_owner_secret)
+                                  resource_owner_key=this.resource_owner_key,
+                                  resource_owner_secret=this.resource_owner_secret)
             params = {"include_email": 'true'}
             credential = oauth.get(credential_url, params).json()
             email = credential.email
@@ -178,22 +178,24 @@ class Login(viewsets.ViewSet):
                                                 'is_stripe_connected': is_stripe_connected}}
         return Response(result)
 
-    # get twitter authentication page url
-    @action(detail=True, methods=['GET'])
-    def login_url(self, request, pk=None):
-        request_token_url = 'https://api.twitter.com/oauth/request_token'
-        client_key = settings.TWITTER_CONSUMER_API_KEY
-        client_secret = settings.TWITTER_CONSUMER_API_SEC_KEY
-        oauth = OAuth1Session(client_key, client_secret=client_secret)
-        fetch_response = oauth.fetch_request_token(request_token_url)
-        self.resource_owner_key = fetch_response.get('oauth_token')
-        self.resource_owner_secret = fetch_response.get('oauth_token_secret')
-        print('oauth_token:', self.resource_owner_key)
-        print('oauth_token_secret:', self.resource_owner_secret)
-        base_authorization_url = 'https://api.twitter.com/oauth/authorize'
-        authorization_url = oauth.authorization_url(base_authorization_url)
 
-        return Response({'status': 'success', 'data': {'url': authorization_url}})
+# get twitter authentication page url
+@api_view()
+@permission_classes([AllowAny])
+def twitter_login_url(request):
+    request_token_url = 'https://api.twitter.com/oauth/request_token'
+    client_key = settings.TWITTER_CONSUMER_API_KEY
+    client_secret = settings.TWITTER_CONSUMER_API_SEC_KEY
+    oauth = OAuth1Session(client_key, client_secret=client_secret)
+    fetch_response = oauth.fetch_request_token(request_token_url)
+    this.resource_owner_key = fetch_response.get('oauth_token')
+    this.resource_owner_secret = fetch_response.get('oauth_token_secret')
+    print('oauth_token:', this.resource_owner_key)
+    print('oauth_token_secret:', this.resource_owner_secret)
+    base_authorization_url = 'https://api.twitter.com/oauth/authorize'
+    authorization_url = oauth.authorization_url(base_authorization_url)
+
+    return Response({'status': 'success', 'data': {'url': authorization_url}})
 
 
 class ForgotPassword(viewsets.ViewSet):
