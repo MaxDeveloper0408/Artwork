@@ -86,6 +86,8 @@ class Login(viewsets.ViewSet):
     LOGIN_WITH_GOOGLE = 3
 
     def create(self, request, *args, **kwargs):
+        global resource_owner_key
+        global resource_owner_secret
         email = ''
         login_type = request.data.get('type')
         if login_type is not self.LOGIN_WITH_TWITTER:
@@ -182,6 +184,8 @@ class Login(viewsets.ViewSet):
 @api_view()
 @permission_classes([AllowAny])
 def twitter_login_url(request):
+    global resource_owner_key
+    global resource_owner_secret
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     client_key = settings.TWITTER_CONSUMER_API_KEY
     client_secret = settings.TWITTER_CONSUMER_API_SEC_KEY
