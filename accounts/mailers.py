@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+import traceback
 
 import os
 from sendgrid import SendGridAPIClient
@@ -59,7 +60,7 @@ def send_email(to, subject, token, activation=True):
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
 
-        print("Response status code: " + response.status_code)
+        print("Response status code: " + str(response.status_code))
         if response.status_code == 202:
             return True
         else:
@@ -68,7 +69,9 @@ def send_email(to, subject, token, activation=True):
         # print(response.body)
         # print(response.headers)
     except Exception as e:
-        print(e.message)
+        print("*************** Error ****************\n")
+        traceback.print_exc()
+        print("**************************************\n")
         return False
 
 

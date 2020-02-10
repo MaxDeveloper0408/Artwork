@@ -57,13 +57,15 @@ class Signup(viewsets.ViewSet):
                 else:
                     is_stripe_connected = False
 
-                send_email(form_data['email'], EMAIL_ACTIVATION_SUB, token)
-                token, created = Token.objects.get_or_create(user=obj)
-                data = {'status': True, 'token': token.key,
-                        "verified": obj.profile.is_verified, "is_profile_complete": False,
-                        'is_stripe_connected': is_stripe_connected}
+                if send_email(form_data['email'], EMAIL_ACTIVATION_SUB, token) is True:
+                    token, created = Token.objects.get_or_create(user=obj)
+                    data = {'status': True, 'token': token.key,
+                            "verified": obj.profile.is_verified, "is_profile_complete": False,
+                            'is_stripe_connected': is_stripe_connected}
 
-                return Response(data)
+                    return Response(data)
+                else:
+                    messages['email'] = "could not send activation email."
             else:
                 messages['role'] = 'Please enter a valid role.'
         else:
@@ -240,8 +242,9 @@ class ForgotPassword(viewsets.ViewSet):
         if user:
             secret = user.profile.update_secret
             token = auth.make_jwt(user.username, secret)
-            send_email(user.email, 'Forgot Password', token, activation=False)
-            return Response({'message': 'Please check your email.'})
+
+            if send_email(user.email, 'Forgot Password', token, activation=False) is True:
+                return Response({'message': 'Please check your email.'})
 
         return Response({'error': error}, status=401)
 
