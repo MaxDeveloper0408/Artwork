@@ -144,7 +144,7 @@ class Login(viewsets.ViewSet):
         # check if the user exists, for login user via email, find the user by email
         # for social login user, find the user by social_id
         try:
-            if login_type is LOGIN_WITH_EMAIL:
+            if login_type is self.LOGIN_WITH_EMAIL:
                 user = User.objects.get(email=email)
                 form_data = {'username': user.username, 'password': request.data.get('password')}
             else:
