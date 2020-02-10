@@ -16,6 +16,7 @@ from rest_framework.exceptions import ValidationError
 from payments.models import PaymentMethod
 from google.oauth2 import id_token
 from google.auth.transport import requests
+import facebook
 from django.conf import settings
 from requests_oauthlib import OAuth1Session
 
@@ -98,7 +99,7 @@ class Login(viewsets.ViewSet):
 
         # verify google idToken in the case of social login
         if login_type is self.LOGIN_WITH_GOOGLE:
-            print('login with google account')
+            print('Login with google account')
             google_request = requests.Request()
             token = request.data.get('idToken')
             try:
@@ -106,13 +107,29 @@ class Login(viewsets.ViewSet):
                                                        google_request,
                                                        settings.GOOGLE_CLIENT_ID)
             except ValueError:
-                result = {'status': 'error', 'message': 'Invalid social user', 'code': -1001}
+                result = {'status': 'error', 'message': 'Invalid google user', 'code': -1001}
                 return Response(result, status=401)
 
             if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-                result = {'status': 'error', 'message': 'Invalid social network issuer', 'code': -1001}
+                result = {'status': 'error', 'message': 'Invalid google issuer', 'code': -1001}
                 return Response(result, status=401)
             social_id = request.data.get('id')
+
+        # verify facebook access token and id
+        if login_type is self.LOGIN_WITH_FACEBOOK:
+            print('Login with facebook account')
+            token = request.data.get('idToken')
+
+            try:
+                graph = facebook.GraphAPI(access_token=token)
+                user_info = graph.get_object(id='me', fields='id')
+                social_id = request.data.get('id')
+                if social_id is not user_info.get('id'):
+                    result = {'status': 'error', 'message': 'Invalid facebook issuer', 'code': -1001}
+                    return Response(result, status=401)
+            except facebook.GraphAPIError:
+                result = {'status': 'error', 'message': 'Invalid facebook user', 'code': -1001}
+                return Response(result, status=401)
 
         # get id from twitter user's credential
         if login_type is self.LOGIN_WITH_TWITTER:
@@ -141,7 +158,7 @@ class Login(viewsets.ViewSet):
             credential = oauth.get(credential_url, params=params).json()
             social_id = credential['id']
             if social_id is None or '':
-                return Response({'status': 'error', 'message': 'Invalid twitter user', 'code': -1005})
+                return Response({'status': 'error', 'message': 'Invalid twitter user', 'code': -1001})
 
         # check if the user exists, for login user via email, find the user by email
         # for social login user, find the user by social_id
