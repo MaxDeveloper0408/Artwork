@@ -151,7 +151,8 @@ class Login(viewsets.ViewSet):
                 profiles = Profile.objects.filter(social_id=social_id, social_type=login_type).values('user_id')
                 if profiles.count() is not 1:
                     # redirect signup page
-                    result = {'status': 'error', 'message': 'Social user should complete their profile', 'code': -1003}
+                    result = {'status': 'error', 'message': 'Social user should complete their profile',
+                              'data': {'social-id': social_id, 'social-type': login_type}, 'code': -1003}
                     return Response(result, status=401)
                 else:
                     user_id = profiles[0]['user_id']
