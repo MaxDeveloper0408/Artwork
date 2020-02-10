@@ -195,6 +195,7 @@ class Login(viewsets.ViewSet):
 def twitter_login_url(request):
     global resource_owner_key
     global resource_owner_secret
+
     request_token_url = 'https://api.twitter.com/oauth/request_token'
     client_key = settings.TWITTER_CONSUMER_API_KEY
     client_secret = settings.TWITTER_CONSUMER_API_SEC_KEY
