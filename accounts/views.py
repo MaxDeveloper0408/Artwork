@@ -94,11 +94,11 @@ class Login(viewsets.ViewSet):
 
         email = ''
         login_type = request.data.get('type')
-        if login_type is not self.LOGIN_WITH_TWITTER:
+        if login_type != self.LOGIN_WITH_TWITTER:
             email = request.data.get('email').lower()
 
         # verify google idToken in the case of social login
-        if login_type is self.LOGIN_WITH_GOOGLE:
+        if login_type == self.LOGIN_WITH_GOOGLE:
             print('Login with google account')
             google_request = requests.Request()
             token = request.data.get('idToken')
@@ -116,15 +116,16 @@ class Login(viewsets.ViewSet):
             social_id = request.data.get('id')
 
         # verify facebook access token and id
-        if login_type is self.LOGIN_WITH_FACEBOOK:
+        if login_type == self.LOGIN_WITH_FACEBOOK:
             print('Login with facebook account')
             token = request.data.get('authToken')
 
             try:
                 graph = facebook.GraphAPI(access_token=token)
                 user_info = graph.get_object(id='me', fields='id')
+                print(user_info)
                 social_id = request.data.get('id')
-                if social_id is not user_info.get('id'):
+                if social_id != user_info.get('id'):
                     result = {'status': 'error', 'message': 'Invalid facebook issuer', 'code': -1001}
                     return Response(result, status=401)
             except facebook.GraphAPIError:
@@ -132,7 +133,7 @@ class Login(viewsets.ViewSet):
                 return Response(result, status=401)
 
         # get id from twitter user's credential
-        if login_type is self.LOGIN_WITH_TWITTER:
+        if login_type == self.LOGIN_WITH_TWITTER:
             print('login with twitter account')
             token = request.data.get('token')
             # might be needed to check if token is equal to the resource_owner_key of login_url()
@@ -157,18 +158,18 @@ class Login(viewsets.ViewSet):
             params = {'include_email': 'true'}
             credential = oauth.get(credential_url, params=params).json()
             social_id = credential['id']
-            if social_id is None or '':
+            if social_id is None or social_id == '':
                 return Response({'status': 'error', 'message': 'Invalid twitter user', 'code': -1001})
 
         # check if the user exists, for login user via email, find the user by email
         # for social login user, find the user by social_id
         try:
-            if login_type is self.LOGIN_WITH_EMAIL:
+            if login_type == self.LOGIN_WITH_EMAIL:
                 user = User.objects.get(email=email)
                 form_data = {'username': user.username, 'password': request.data.get('password')}
             else:
                 profiles = Profile.objects.filter(social_id=social_id, social_type=login_type).values('user_id')
-                if profiles.count() is not 1:
+                if profiles.count() != 1:
                     # redirect signup page
                     result = {'status': 'error', 'message': 'Social user should complete their profile',
                               'data': {'social-id': social_id, 'social-type': login_type}, 'code': -1003}
@@ -179,12 +180,12 @@ class Login(viewsets.ViewSet):
 
         except User.DoesNotExist:
             # if login is not via social, return error
-            if login_type is self.LOGIN_WITH_EMAIL:
+            if login_type == self.LOGIN_WITH_EMAIL:
                 result = {'status': 'error', 'message': 'User does not exist', 'code': -1002}
                 return Response(result, status=401)
 
         # check password
-        if login_type is self.LOGIN_WITH_EMAIL:
+        if login_type == self.LOGIN_WITH_EMAIL:
             form = AuthenticationForm(data=form_data)
             if form.is_valid():
                 user = form.get_user()
