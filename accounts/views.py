@@ -60,9 +60,10 @@ class Signup(viewsets.ViewSet):
 
                 if send_email(form_data['email'], EMAIL_ACTIVATION_SUB, token) is True:
                     token, created = Token.objects.get_or_create(user=obj)
-                    data = {'status': True, 'token': token.key,
-                            "verified": obj.profile.is_verified, "is_profile_complete": False,
-                            'is_stripe_connected': is_stripe_connected}
+                    data = {'status': 'success', 'data': {'token': token.key,
+                                                          "verified": obj.profile.is_verified,
+                                                          "is_profile_complete": False,
+                                                          'is_stripe_connected': is_stripe_connected}}
 
                     return Response(data)
                 else:
@@ -76,7 +77,7 @@ class Signup(viewsets.ViewSet):
                 if messages.get('password1'):
                     messages.pop('password1')
 
-        return Response({"status": False, "errors": messages}, status=400)
+        return Response({"status": "error", "errors": messages}, status=400)
 
 
 class Login(viewsets.ViewSet):
@@ -203,6 +204,22 @@ class Login(viewsets.ViewSet):
             is_stripe_connected = True
         else:
             is_stripe_connected = False
+
+        profile = Profile.objects.filter(user=user)
+        if profile:
+            # Artist
+            if profile['role'] == 'A':
+                if is_profile_complete is False:
+                    result = {'status': 'error', 'message': 'Artist should complete their profile', 'code': -1006}
+                    return Response(result, status=401)
+                if is_stripe_connected is False:
+                    result = {'status': 'error', 'message': 'Artist should be verified their stripe payment method',
+                              'code': -1007}
+                    return Response(result, status=401)
+            else:  # collector
+                if is_profile_complete is False:
+                    result = {'status': 'error', 'message': 'Collector should complete their profile', 'code': -1006}
+                    return Response(result, status=401)
 
         result = {'status': 'success', 'data': {'token': token.key, 'verified': user.profile.is_verified,
                                                 'is_profile_complete': is_profile_complete,
@@ -363,10 +380,17 @@ class ProfileViewSet(viewsets.ViewSet):
                     raise ValidationError(detail={"primary_address": ["Address does not belong to you."]})
             except Address.DoesNotExist as e:
                 raise ValidationError(detail={"primary_address": [str(e)]})
-
         else:
-            p_serializer.save()
-        return Response(p_serializer.data)
+            address = Address.objects.create(user=request.user)
+            address.save()
+            a_serializer = AddressSerializer(address, data=mutable_data, partial=True)
+            a_serializer.is_valid(raise_exception=True)
+            a_serializer.save()
+            p_serializer.save(primary_address=address)
+
+        # send token info
+        token = Token.objects.get(user=request.user)
+        return Response(p_serializer.data.update("token", token))
 
     @action(['PUT'], False)
     def change_password(self, request, *args, **kwargs):
