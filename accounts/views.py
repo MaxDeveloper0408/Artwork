@@ -118,7 +118,7 @@ class Login(viewsets.ViewSet):
         # verify facebook access token and id
         if login_type is self.LOGIN_WITH_FACEBOOK:
             print('Login with facebook account')
-            token = request.data.get('idToken')
+            token = request.data.get('authToken')
 
             try:
                 graph = facebook.GraphAPI(access_token=token)
