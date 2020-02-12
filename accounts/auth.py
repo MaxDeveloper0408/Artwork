@@ -73,7 +73,7 @@ def make_expiry_JWT(username, secret):
     return jwt.encode(data, SECRET, algorithm='HS256').decode('ascii')
 
 
-def checkJWT(secret):
+def check_jwt(secret):
     # check for jwt
     try:
         token = jwt.decode(secret, SECRET, algorithms=['HS256'])

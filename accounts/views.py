@@ -213,10 +213,10 @@ class Login(viewsets.ViewSet):
         else:
             is_stripe_connected = False
 
-        profile = Profile.objects.filter(user=user)
+        profile = Profile.objects.filter(user=user).values('role')
         if profile:
             # Artist
-            if profile['role'] == 'A':
+            if profile[0]['role'] == 'A':
                 if is_profile_complete is False:
                     result = {'status': 'error', 'message': 'Artist should complete their profile', 'code': -1006}
                     return Response(result, status=401)
@@ -262,7 +262,6 @@ class ForgotPassword(viewsets.ViewSet):
     http_method_names = ['post', ]
 
     def create(self, request, *args, **kwargs):
-        print("123123")
         # username = request.data.get("username")
         email = request.data.get("email")
         error = None
@@ -289,29 +288,14 @@ class ForgotPassword(viewsets.ViewSet):
         return Response({'error': error}, status=401)
 
 
-class ResetPassword(APIView):
+class ResetPassword(viewsets.ViewSet):
     permission_classes = (AllowAny,)
+    http_method_names = ['post', ]
 
-    def get(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
 
-        secret = kwargs.get('secret')
-        data = auth.checkJWT(secret)
-        if data:
-            username = data['username']
-            key = data['key']
-            try:
-                user = User.objects.get(username=username)
-                if user.profile.activation_secret == key:
-                    return Response({'valid': True})
-            except:
-                pass
-
-        return Response({'valid': False}, status=400)
-
-    def post(self, request, *args, **kwargs):
-
-        secret = kwargs.get('secret')
-        data = auth.checkJWT(secret)
+        token = request.data.get('token')
+        data = auth.check_jwt(token)
         password = request.data.get('password')
 
         if data:
@@ -324,7 +308,6 @@ class ResetPassword(APIView):
                 user = None
 
             if user.profile.activation_secret == key:
-
                 form_data = {"new_password1": password, "new_password2": password}
                 change_password_form = SetPasswordForm(user, form_data)
 
@@ -333,7 +316,6 @@ class ResetPassword(APIView):
                     user.profile.update_secret  # update activation secret
                     message = {"status": True}
                     return JsonResponse(message)
-
                 else:
                     message = change_password_form.errors.get_json_data()
                     message['status'] = False
@@ -445,7 +427,7 @@ def activate(request, secret):
     """
     # activate user  Profile
     # check jwt and extract data
-    data = auth.checkJWT(secret)
+    data = auth.check_jwt(secret)
     if data:
         # if data is available
         # get usrname from data

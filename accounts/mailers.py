@@ -12,21 +12,24 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 
-
 def TEXT(token):
-    return f'{HOST}/api/accounts/activate/{token}'
+    # return f'{HOST}/api/accounts/activate/{token}'
+    return f'localhost:4200/api/accounts/activate/{token}'
 
 
 def HTML(token):
-    return f'<h5><a href="{HOST}/api/accounts/activate/{token}">Click here to activate account</a></h5>'
+    # return f'<h5><a href="{HOST}/api/accounts/activate/{token}">Click here to activate account</a></h5>'
+    return f'<h5><a href="http://localhost:4200/api/accounts/activate/{token}">Click here to activate account</a></h5>'
 
 
 def ResetTEXT(token):
-    return f'{HOST}/reset-password/{token}'
+    # return f'{HOST}/reset-password/{token}'
+    return f'localhost:4200/reset-password/{token}'
 
 
 def ResetHTML(token):
-    return f'<h5><a href="{HOST}/reset-password/{token}">Click here to reset yourpassword</a></h5>'
+    # return f'<h5><a href="{HOST}/reset-password/{token}">Click here to reset yourpassword</a></h5>'
+    return f'<h5><a href="http://localhost:4200/reset-password?token={token}">Click here to reset yourpassword</a></h5>'
 
 
 def send_email(to, subject, token, activation=True):
@@ -51,6 +54,7 @@ def send_email(to, subject, token, activation=True):
     #           "text": text,
     #           "html": html})
 
+    print(html)
     message = Mail(
         from_email=EMAIL_FROM,
         to_emails=to,
