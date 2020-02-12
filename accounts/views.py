@@ -45,20 +45,22 @@ class Signup(viewsets.ViewSet):
 
         if form.is_valid():
             if form_data['role'] in valid_roles:
-                obj = form.save()
                 activation_secret = auth.makesecret(form_data['username'])
-
-                Profile.objects.filter(user_id=obj.id).update(role=form_data['role'],
-                                                              activation_secret=activation_secret)
-
                 token = auth.make_jwt(form_data['username'], activation_secret)
-                method = PaymentMethod.objects.filter(user_id=obj.id).first()
-                if method:
-                    is_stripe_connected = True
-                else:
-                    is_stripe_connected = False
 
                 if send_email(form_data['email'], EMAIL_ACTIVATION_SUB, token) is True:
+                    obj = form.save()
+
+                    Profile.objects.filter(user_id=obj.id).update(role=form_data['role'],
+                                                                  activation_secret=activation_secret)
+
+                    is_stripe_connected = False
+                    # method = PaymentMethod.objects.filter(user_id=obj.id).first()
+                    # if method:
+                    #     is_stripe_connected = True
+                    # else:
+                    #     is_stripe_connected = False
+
                     token, created = Token.objects.get_or_create(user=obj)
                     data = {'status': 'success', 'data': {'token': token.key,
                                                           "verified": obj.profile.is_verified,
@@ -67,9 +69,15 @@ class Signup(viewsets.ViewSet):
 
                     return Response(data)
                 else:
-                    messages['email'] = "could not send activation email."
+                    try:
+                        messages['email'].append({'message': 'could not send activation email.'})
+                    except:
+                        messages['email'] = [{'message': 'could not send activation email.'}]
             else:
-                messages['role'] = 'Please enter a valid role.'
+                try:
+                    messages['role'].append({'message': 'Please enter a valid role.'})
+                except:
+                    messages['role'] = [{'message': 'Please enter a valid role.'}]
         else:
             if messages.get('password2'):
                 messages['password'] = messages.get('password2')
@@ -254,25 +262,20 @@ class ForgotPassword(viewsets.ViewSet):
     http_method_names = ['post', ]
 
     def create(self, request, *args, **kwargs):
-        username = request.data.get("username")
+        print("123123")
+        # username = request.data.get("username")
         email = request.data.get("email")
         error = None
         user = None
 
-        if username:
-            try:
-                user = User.objects.get(username=username)
-            except:
-                error = 'Username does not exist.'
-
-        elif email:
+        if email:
             try:
                 user = User.objects.get(email=email)
             except:
                 error = 'Email does not exist.'
 
         else:
-            error = 'Please enter username or email.'
+            error = 'Please enter email.'
 
         if user:
             secret = user.profile.update_secret
@@ -280,6 +283,8 @@ class ForgotPassword(viewsets.ViewSet):
 
             if send_email(user.email, 'Forgot Password', token, activation=False) is True:
                 return Response({'message': 'Please check your email.'})
+            else:
+                error = 'Invalid email.'
 
         return Response({'error': error}, status=401)
 
