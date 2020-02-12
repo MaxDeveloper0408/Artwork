@@ -1,27 +1,30 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
+
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <title>Aartcy</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="icon" type="image/x-icon" href="{% static 'angular/favicon.ico' %}">
-  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+  <link rel="stylesheet" href="{% static 'static/assets/css/style.css' %}">
   <link rel="stylesheet" href="'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="{% static 'angular/styles.css' %}"></head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">-->
 
 <body>
   <app-root></app-root>
-<script src="{% static 'angular/runtime.js' %}" type="module"></script>
-  <script src="{% static 'angular/polyfills.js' %}" type="module"></script>
-  <script src="{% static 'angular/main.js' %}" type="module"></script>
+  <script src="{% static 'runtime-es2015.js' %}" type="module"></script>
+  <script src="{% static 'runtime-es5.js' %}" nomodule defer></script>
+  <script src="{% static 'polyfills-es5.js' %}" nomodule defer></script>
+  <script src="{% static 'polyfills-es2015.js' %}" type="module"></script>
+  <script src="{% static 'main-es2015.js' %}" type="module"></script>
+  <script src="{% static 'main-es5.js' %}" nomodule defer></script>
 </body>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://js.stripe.com/v3/"></script>
 <!-- <script src="https://code.highcharts.com/highcharts.src.js"></script> -->
 <script src="{% static 'assets/js/flickity.pkgd.min.js' %}"></script>
@@ -33,7 +36,10 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155055207-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
   gtag('js', new Date());
 
   gtag('config', 'UA-155055207-1');
@@ -42,18 +48,18 @@
 
 <script>
   var token = JSON.parse(localStorage.getItem('user_token'));
-  var endpoint = 'ws://'+ window.location.host + ':8001/notifications/'+token;
+  var endpoint = 'ws://' + window.location.host + ':8001/notifications/' + token;
   var socket = new ReconnectingWebSocket(endpoint);
-  socket.onmessage = function (e) {
-      console.log('onmessage',JSON.parse(e.data))
+  socket.onmessage = function(e) {
+    console.log('onmessage', JSON.parse(e.data))
   };
-  socket.onopen = function (e) {
-      console.log('open',e)
+  socket.onopen = function(e) {
+    console.log('open', e)
   };
-  socket.onerror = function (e) {
-      console.log('onerror',e)
+  socket.onerror = function(e) {
+    console.log('onerror', e)
   };
-  socket.onclose = function (e) {
-      console.log('onclose',e)
+  socket.onclose = function(e) {
+    console.log('onclose', e)
   };
 </script>
