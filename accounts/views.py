@@ -339,7 +339,6 @@ class ProfileViewSet(viewsets.ViewSet):
 
     @action(['PUT'], False)
     def update_profile(self, request, *args, **kwargs):
-
         mutable_data = request.data
         username = mutable_data.pop('username', False)
         password = mutable_data.pop('password', False)
@@ -375,9 +374,7 @@ class ProfileViewSet(viewsets.ViewSet):
             a_serializer.save()
             p_serializer.save(primary_address=address)
 
-        # send token info
-        token = Token.objects.get(user=request.user)
-        return Response(p_serializer.data.update("token", token))
+        return Response(p_serializer.data)
 
     @action(['PUT'], False)
     def change_password(self, request, *args, **kwargs):

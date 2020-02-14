@@ -168,7 +168,13 @@ EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = env.str('STRIPE_PUBLISHABLE_KEY')
 STRIPE_CLIENT_ID = env.str('STRIPE_CLIENT_ID')
-DOMAIN = ALLOWED_HOSTS[0]
+
+if DEBUG is True:
+    # if development mode, DOMAIN should be localhost:4200
+    DOMAIN = "localhost:4200"
+else:
+    # if production mode, DOMAIN should be arttwork.com
+    DOMAIN = ALLOWED_HOSTS[0]
 
 PAGE_LIMIT = 10
 PAGE_OFFSET = 1

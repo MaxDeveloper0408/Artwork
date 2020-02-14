@@ -8,5 +8,3 @@ EMAIL_FROM = 'Webdevsmart@hotmail.com'
 EMAIL_ACTIVATION_SUB = 'ACTIVATE YOUR ACCOUNT'  # email activation subject
 
 SENDGRID_API_KEY = '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'
-
-HOST = settings.ALLOWED_HOSTS[0]
