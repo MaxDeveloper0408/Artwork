@@ -1,5 +1,5 @@
 body {
-	font-family: 'AvenirNextLTPro-Regular' !important;
+  font-family: 'AvenirNextLTPro-Regular' !important;
   margin: 0px;
   padding: 0px;
 }
@@ -31,20 +31,19 @@ body {
 }
 
 /** ======================  Reset ==============================**/
-
 body a {
-	font-weight: 700;
-	color: #3D7CF3;
+  font-weight: 700;
+  color: #3D7CF3;
 }
 
 body a:hover {
-	text-decoration: none;
-	color: #5890FB;
+  text-decoration: none;
+  color: #5890FB;
 }
 
 .small-container {
-	width: 500px;
-	margin: 0 auto;
+  width: 500px;
+  margin: 0 auto;
 }
 
 form input[type="text"], form input[type="password"] {
@@ -55,11 +54,11 @@ form input[type="text"], form input[type="password"] {
   padding: 6px;
   padding-left: 0px;
   font-size: 18px;
-	outline: none;
+  outline: none;
 }
 
 .btn.btn-primary, .btn.btn-secondary {
-	font-size: 18px;
+  font-size: 18px;
   text-transform: capitalize;
   font-weight: 500;
   border-radius: 5px;
@@ -68,23 +67,23 @@ form input[type="text"], form input[type="password"] {
 }
 
 .btn.btn-primary.blue {
-	background: #3D7CF3;
+  background: #3D7CF3;
 }
 
 .btn.btn-primary.blue:hover {
-	background: #5890FB;
+  background: #5890FB;
 }
 
 .btn.btn-secondary {
-	border: none;
+  border: none;
 }
 
 .btn.btn-secondary.grey {
-	background: #93AFCA;
+  background: #93AFCA;
 }
 
 .btn.btn-secondary.grey:hover {
-	background: rgba(147, 175, 202, 0.8);
+  background: rgba(147, 175, 202, 0.8);
 }
 
 .fa.fa-facebook {
@@ -1353,8 +1352,6 @@ form#info .adam .fely.scd {
   background: #3D7CF3 !important;
 }
 
-
-
 body#act-dl .inner-bon {
   width: 100%;
   max-width: 500px;
@@ -1384,7 +1381,7 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
 /*** start-login-page***/
 .bon-sec {
   height: 100%;
-	min-height: 100vh;
+  min-height: 100vh;
   padding-top: 50px;
   background: #F3F5F9;
 }
@@ -1392,6 +1389,14 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
 .inner-bon {
   background: #fff;
   border-radius: 10px;
+}
+
+.inner-bon>.row {
+  margin: 0;
+}
+
+.inner-bon>.row>.col-md-6, .inner-bon>.row>.col-md-12, .inner-bon>.row>.col-12, .inner-bon>.row>.col-md-4, .inner-bon>.row>.col-md-3 {
+  padding: 0;
 }
 
 .left-back {
@@ -1423,11 +1428,11 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
   width: 100%;
   display: block;
   font-size: 16px;
-	margin: 0;
+  margin: 0;
 }
 
 .right-bon form .form-group a.forgot-password {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 .right-bon form .form-group button.btn.btn-primary {
@@ -1487,38 +1492,38 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
 }
 
 .right-bon .row.sign-act button {
-	width: 100%;
-	padding: 15px 0;
+  width: 100%;
+  padding: 15px 0;
 }
 
 .right-bon form .already-have-account {
-	font-size: 14px;
+  font-size: 14px;
   color: #93AFCA;
   font-weight: 500;
-	vertical-align: sub;
+  vertical-align: sub;
 }
 
 .right-bon .row.sign-act .already-have-account a {
-	text-decoration: none;
+  text-decoration: none;
   color: #3D7CF3;
   line-height: 20px;
   font-size: 14px;
-	font-weight: 700;
+  font-weight: 700;
   text-transform: capitalize;
 }
 
 /*** start-signup-additional-page***/
 .signup-additional {
-	padding: 40px;
+  padding: 40px;
 }
 
 .signup-additional .signup-additional-act {
-	margin-top: 5rem;
+  margin-top: 5rem;
 }
 
 .signup-additional .signup-additional-act a {
   width: 100%;
-	padding: 15px 0;
+  padding: 15px 0;
 }
 
 .row.act-dtl .signup-additional-act a.fill {
@@ -1534,62 +1539,66 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
 
 .signup-additional .signup-additional-act .goto-dash {
   width: 100%;
-	padding: 15px 0;
+  padding: 15px 0;
 }
 
 .signup-additional .get-hlp p {
   font-weight: 500 !important;
   color: #93AFCA;
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .signup-additional select {
-	border: none;
+  border: none;
   border-bottom: 2px #E9EFFA solid;
   width: 100%;
   padding: 9px;
   padding-left: 0;
   font-size: 18px;
 }
+
 .signup-additional .input-group input {
-	flex: 1 1 0%;
-	width: 100%;
-	border: none;
-	border-bottom: 2px #E9EFFA solid;
-	outline: none;
-	padding: 6px;
-	padding-left: 0;
-	font-size: 18px;
+  flex: 1 1 0%;
+  width: 100%;
+  border: none;
+  border-bottom: 2px #E9EFFA solid;
+  outline: none;
+  padding: 6px;
+  padding-left: 0;
+  font-size: 18px;
 }
+
 .signup-additional .input-group button {
-	border: none;
+  border: none;
   border-bottom: 2px #E9EFFA solid;
 }
-/*** end-signup-additional-page***/
 
+/*** end-signup-additional-page***/
 /*** start-forgot-password-page***/
 .forgot-password-form {
-	padding: 30px;
+  padding: 30px;
 }
+
 .forgot-password-form h2 {
-	margin-bottom: 30px;
+  margin-bottom: 30px;
 }
+
 /*** end-forgot-password-page***/
 .reset-password-form {
-	padding: 30px;
+  padding: 30px;
 }
+
 .reset-password-form h2 {
-	margin-bottom: 30px;
+  margin-bottom: 30px;
 }
+
 /*** start-reset-password-page***/
-
 /*** end-reset-password-page***/
-
 /*** start-login-page***/
 /** start-home-page-header **/
 .home-header {
   background: white;
-	border-bottom: 2px solid #F3F5F9;
+  border-bottom: 2px solid #F3F5F9;
   position: fixed;
   top: 0;
   width: 100%;
@@ -2123,8 +2132,8 @@ h2 {
   color: #fff;
 }
 
-.footer-social ul li + li {
-	margin-left: 15px;
+.footer-social ul li+li {
+  margin-left: 15px;
 }
 
 .footer-social ul li .fa {
@@ -3544,7 +3553,7 @@ ul.list-sidebar::-webkit-scrollbar-track {
       height: auto;
     }
 
-    .footer-social ul li + li {
+    .footer-social ul li+li {
       margin-left: 10px;
     }
 

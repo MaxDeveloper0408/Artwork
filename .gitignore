@@ -89,4 +89,7 @@ Aartcy/local_settings.py
 static_collected/
 db.sqlite3
 
+# env file
+.env
+
 venv/

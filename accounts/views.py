@@ -213,21 +213,21 @@ class Login(viewsets.ViewSet):
         else:
             is_stripe_connected = False
 
-        profile = Profile.objects.filter(user=user).values('role')
-        if profile:
-            # Artist
-            if profile[0]['role'] == 'A':
-                if is_profile_complete is False:
-                    result = {'status': 'error', 'message': 'Artist should complete their profile', 'code': -1006}
-                    return Response(result, status=401)
-                if is_stripe_connected is False:
-                    result = {'status': 'error', 'message': 'Artist should be verified their stripe payment method',
-                              'code': -1007}
-                    return Response(result, status=401)
-            else:  # collector
-                if is_profile_complete is False:
-                    result = {'status': 'error', 'message': 'Collector should complete their profile', 'code': -1006}
-                    return Response(result, status=401)
+        # profile = Profile.objects.filter(user=user).values('role')
+        # if profile:
+        #     # Artist
+        #     if profile[0]['role'] == 'A':
+        #         if is_profile_complete is False:
+        #             result = {'status': 'error', 'message': 'Artist should complete their profile', 'code': -1006}
+        #             return Response(result, status=401)
+        #         if is_stripe_connected is False:
+        #             result = {'status': 'error', 'message': 'Artist should be verified their stripe payment method',
+        #                       'code': -1007}
+        #             return Response(result, status=401)
+        #     else:  # collector
+        #         if is_profile_complete is False:
+        #             result = {'status': 'error', 'message': 'Collector should complete their profile', 'code': -1006}
+        #             return Response(result, status=401)
 
         result = {'status': 'success', 'data': {'token': token.key, 'verified': user.profile.is_verified,
                                                 'is_profile_complete': is_profile_complete,
