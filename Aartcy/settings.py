@@ -157,17 +157,20 @@ REST_FRAMEWORK = {
 }
 
 # Email Settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 
 # Stripe Settings
-STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
-STRIPE_PUBLISHABLE_KEY = env.str('STRIPE_PUBLISHABLE_KEY')
-STRIPE_CLIENT_ID = env.str('STRIPE_CLIENT_ID')
+if DEBUG is True:
+    # if development mode, DOMAIN should be localhost:4200
+    STRIPE_SECRET_KEY = 'sk_test_KfQX0Btn8s2SbArccTLvnii800wOrhcuxa'
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_D7tZZuyq3MOf2Yegj1gzwywC00NLg9Si4T'
+    STRIPE_CLIENT_ID = 'ca_Gi4xztYTm0ezwLSvAf8xJxVXhLB4zqWG'
+else:
+    # if production mode, DOMAIN should be arttwork.com
+    STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
+    STRIPE_PUBLISHABLE_KEY = env.str('STRIPE_PUBLISHABLE_KEY')
+    STRIPE_CLIENT_ID = env.str('STRIPE_CLIENT_ID')
+
 
 if DEBUG is True:
     # if development mode, DOMAIN should be localhost:4200
