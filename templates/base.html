@@ -1,7 +1,6 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -10,56 +9,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
   <link rel="stylesheet" href="{% static 'static/assets/css/style.css' %}">
-  <link rel="stylesheet" href="'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="{% static 'styles.css' %}">
-</head>
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'styles.css' %}"></head>
 
 <body>
   <app-root></app-root>
-<!--  <script src="{% static 'runtime-es2015.js' %}" type="module"></script>-->
-  <script src="{% static 'runtime-es5.js' %}" nomodule defer></script>
-  <script src="{% static 'polyfills-es5.js' %}" nomodule defer></script>
-<!--  <script src="{% static 'polyfills-es2015.js' %}" type="module"></script>-->
-<!--  <script src="{% static 'main-es2015.js' %}" type="module"></script>-->
-  <script src="{% static 'main-es5.js' %}" nomodule defer></script>
-</body>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="{% static 'runtime-es2015.js' %}" type="module"></script><script src="{% static 'runtime-es5.js' %}" nomodule defer></script><script src="{% static 'polyfills-es5.js' %}" nomodule defer></script><script src="{% static 'polyfills-es2015.js' %}" type="module"></script><script src="{% static 'main-es2015.js' %}" type="module"></script><script src="{% static 'main-es5.js' %}" nomodule defer></script></body>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://js.stripe.com/v3/"></script>
-<!-- <script src="https://code.highcharts.com/highcharts.src.js"></script> -->
 <script src="{% static 'static/assets/js/flickity.pkgd.min.js' %}"></script>
 <script type="text/javascript">
   var stripe = Stripe('pk_test_K2qK4YNo16phDVS4OO5rfryF00mvsrEzmD'); // use your test publishable key
   var elements = stripe.elements();
 </script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155055207-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
 
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag('js', new Date());
 
-  gtag('config', 'UA-155055207-1');
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
-
-<script>
-  var token = JSON.parse(localStorage.getItem('user_token'));
-  var endpoint = 'ws://' + window.location.host + ':8001/notifications/' + token;
-  var socket = new ReconnectingWebSocket(endpoint);
-  socket.onmessage = function(e) {
-    console.log('onmessage', JSON.parse(e.data))
-  };
-  socket.onopen = function(e) {
-    console.log('open', e)
-  };
-  socket.onerror = function(e) {
-    console.log('onerror', e)
-  };
-  socket.onclose = function(e) {
-    console.log('onclose', e)
-  };
-</script>
+</html>
