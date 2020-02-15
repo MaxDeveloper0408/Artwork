@@ -1663,12 +1663,12 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
   font-size: 26px;
 }
 
-.search {
+.join-for-free-form {
   position: relative;
   margin-top: 30px;
 }
 
-.hom-bnr .money-sell .search input[type="search"] {
+.hom-bnr .money-sell .join-for-free-form input {
   width: 100%;
   border: 0px;
   height: 60px;
@@ -1677,7 +1677,7 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
   padding-right: 140px;
 }
 
-.hom-bnr .money-sell .search button {
+.hom-bnr .money-sell .join-for-free-form button {
   position: absolute;
   right: 5px;
   top: 5px;
