@@ -45,6 +45,7 @@ select {
   -webkit-appearance: none;  /* for webkit (safari, chrome) compatibility */
   -moz-appearance: none; /* for firefox compatibility */
   appearance: none;
+  outline: none;
 }
 
 .small-container {
@@ -1558,7 +1559,7 @@ body#act-dl .inner-bon .right-bon input[type="password"] {
   border: none;
   border-bottom: 2px #E9EFFA solid;
   width: 100%;
-  padding: 9px;
+  padding: 6px;
   padding-left: 0;
   font-size: 18px;
 }
