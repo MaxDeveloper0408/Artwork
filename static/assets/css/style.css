@@ -41,6 +41,12 @@ body a:hover {
   color: #5890FB;
 }
 
+select {
+  -webkit-appearance: none;  /* for webkit (safari, chrome) compatibility */
+  -moz-appearance: none; /* for firefox compatibility */
+  appearance: none;
+}
+
 .small-container {
   width: 500px;
   margin: 0 auto;
