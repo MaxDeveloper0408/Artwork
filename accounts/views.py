@@ -335,7 +335,8 @@ class ProfileViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Profile.objects.get(user=request.user)
         serializer = ProfileSerializer(queryset)
-        return Response(serializer.data)
+        result = {'status': 'success', 'data': serializer.data};
+        return Response(result);
 
     @action(['PUT'], False)
     def update_profile(self, request, *args, **kwargs):
