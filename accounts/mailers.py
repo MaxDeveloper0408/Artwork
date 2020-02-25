@@ -17,7 +17,7 @@ def activation_text(token):
 
 
 def activation_html(token):
-    return f'<h5><a href="{settings.DOMAIN}/api/accounts/activate/{token}">Click here to activate account</a></h5>'
+    return f'<h5><a href="https://{settings.DOMAIN}/api/accounts/activate/{token}">Click here to activate account</a></h5>'
 
 
 def reset_text(token):
@@ -25,7 +25,7 @@ def reset_text(token):
 
 
 def reset_html(token):
-    return f'<h5><a href="{settings.DOMAIN}/reset-password/{token}">Click here to reset your password</a></h5>'
+    return f'<h5><a href="https://{settings.DOMAIN}/reset-password/{token}">Click here to reset your password</a></h5>'
 
 
 def send_email(to, subject, token, activation=True):
