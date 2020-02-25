@@ -314,8 +314,7 @@ class ResetPassword(viewsets.ViewSet):
                 if change_password_form.is_valid():
                     change_password_form.save()
                     user.profile.update_secret  # update activation secret
-                    message = {"status": True}
-                    return JsonResponse(message)
+                    return Response({'status': 'success', 'data': {}})
                 else:
                     message = change_password_form.errors.get_json_data()
                     message['status'] = False
@@ -323,10 +322,9 @@ class ResetPassword(viewsets.ViewSet):
                         message['password'] = message.pop('new_password1')
                     message['confirm_password'] = message.pop('new_password2')
 
-                message['valid'] = True
-                return JsonResponse(message, status=401)
+                return Response({'status': 'error', 'message': 'Invalid token'}, status=401)
 
-        return JsonResponse({'valid': False}, status=401)
+        return Response({'status': 'error', 'message': 'Invalid request'}, status=401)
 
 
 class ProfileViewSet(viewsets.ViewSet):
