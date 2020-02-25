@@ -281,11 +281,11 @@ class ForgotPassword(viewsets.ViewSet):
             token = auth.make_jwt(user.username, secret)
 
             if send_email(user.email, 'Forgot Password', token, activation=False) is True:
-                return Response({'message': 'Please check your email.'})
+                return Response({'status': 'success', 'data': {}})
             else:
                 error = 'Invalid email.'
 
-        return Response({'error': error}, status=401)
+        return Response({'status': 'error', 'message': error}, status=404)
 
 
 class ResetPassword(viewsets.ViewSet):
