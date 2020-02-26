@@ -38,11 +38,11 @@ class Signup(viewsets.ViewSet):
             'role': request.data.get('role'),
         }
 
-        valid_roles = ['A', 'C']
-
+        # 0: Admin, 1: Artist, 2: Collector
+        valid_roles = [0, 1, 2]
         form = SignupForm(form_data)
         messages = form.errors.get_json_data()
-
+        message = ''
         if form.is_valid():
             if form_data['role'] in valid_roles:
                 activation_secret = auth.makesecret(form_data['username'])
@@ -69,23 +69,19 @@ class Signup(viewsets.ViewSet):
 
                     return Response(data)
                 else:
-                    try:
-                        messages['email'].append({'message': 'could not send activation email.'})
-                    except:
-                        messages['email'] = [{'message': 'could not send activation email.'}]
+                    message = 'Fail to send verification email'
+                    code = -2000
             else:
-                try:
-                    messages['role'].append({'message': 'Please enter a valid role.'})
-                except:
-                    messages['role'] = [{'message': 'Please enter a valid role.'}]
+                message = 'Invalid user role'
+                code = -2001
         else:
-            if messages.get('password2'):
-                messages['password'] = messages.get('password2')
-                messages.pop('password2')
-                if messages.get('password1'):
-                    messages.pop('password1')
+            for key in messages:
+                if messages[key]:
+                    message = messages[key][0]['message']
+                    break  # the first error will be returned to the user
 
-        return Response({"status": "error", "errors": messages}, status=400)
+            code = -2002
+        return Response({"status": "error", 'message': message, 'code': code}, status=400)
 
 
 class Login(viewsets.ViewSet):
