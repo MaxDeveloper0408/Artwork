@@ -167,23 +167,6 @@ $kt-social-colors: (
 ) !default;
 
 // Root Font Settings
-    
-@font-face {
-  font-family: 'AvenirNextLTPro-Regular';
-  src: url('assets/fonts/AvenirNextLTPro-Regular.eot?#iefix') format('embedded-opentype'), url('assets/fonts/AvenirNextLTPro-Regular.otf') format('opentype'),
-    url('assets/fonts/AvenirNextLTPro-Regular.woff') format('woff'), url('assets/fonts/AvenirNextLTPro-Regular.ttf') format('truetype'), url('assets/fonts/AvenirNextLTPro-Regular.svg#AvenirNextLTPro-Regular') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'AvenirNextLTPro-Bold';
-  src: url('assets/fonts/AvenirNextLTPro-Bold.eot?#iefix') format('embedded-opentype'), url('assets/fonts/AvenirNextLTPro-Bold.otf') format('opentype'),
-    url('assets/fonts/AvenirNextLTPro-Bold.woff') format('woff'), url('assets/fonts/AvenirNextLTPro-Bold.ttf') format('truetype'), url('assets/fonts/AvenirNextLTPro-Bold.svg#AvenirNextLTPro-Bold') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
 $kt-font-families: (
     regular: unquote('AvenirNextLTPro-Regular, Poppins, Helvetica, sans-serif'),
     heading: unquote('AvenirNextLTPro-Regular, Poppins, Helvetica, sans-serif')
