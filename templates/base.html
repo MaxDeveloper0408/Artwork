@@ -1,28 +1,43 @@
 {% load static %}
 <!doctype html>
+<!--
+Theme: Metronic - The Ultimate Bootstrap Admin Theme
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Dribbble: www.dribbble.com/keenthemes
+Like: www.facebook.com/keenthemes
+License: You must have a valid license purchased only from https://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469/ in order to legally use the theme for your project.
+-->
 <html lang="en">
+
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <title>Arttwork</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-  <link rel="stylesheet" href="{% static 'static/assets/css/style.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<meta charset="utf-8">
+	<title>Arttwork</title>
+	<base href="/">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/x-icon" href="{% static 'assets/media/logos/favicon.ico' %}">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700" rel="stylesheet">
+	<script src="{% static 'assets/js/global/components/base/util.js' %}" type="application/javascript"></script>
+	<script src="{% static 'assets/js/global/components/base/header.js' %}" type="application/javascript"></script>
+	<script src="{% static 'assets/js/global/components/base/menu.js' %}" type="application/javascript"></script>
+	<script src="{% static 'assets/js/global/components/base/offcanvas.js' %}" type="application/javascript"></script>
+	<script src="{% static 'assets/js/global/components/base/scrolltop.js' %}" type="application/javascript"></script>
+	<script src="{% static 'assets/js/global/components/base/toggle.js' %}" type="application/javascript"></script>
+	<script src="{% static 'assets/js/global/components/base/dialog.js' %}" type="application/javascript"></script>
+  <script src="{% static 'assets/js/global/components/base/wizard.js' %}" type="application/javascript"></script>
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 <link rel="stylesheet" href="{% static 'styles.css' %}"></head>
 
-<body>
-  <app-root></app-root>
-<script src="{% static 'runtime-es2015.js' %}" type="module"></script><script src="{% static 'runtime-es5.js' %}" nomodule defer></script><script src="{% static 'polyfills-es5.js' %}" nomodule defer></script><script src="{% static 'polyfills-es2015.js' %}" type="module"></script><script src="{% static 'main-es2015.js' %}" type="module"></script><script src="{% static 'main-es5.js' %}" nomodule defer></script></body>
+<body kt-root><script src="{% static 'runtime.js' %}"></script><script src="{% static 'polyfills-es5' %}.js" nomodule></script><script src="{% static 'polyfills.js' %}"></script><script src="{% static 'main.js' %}"></script></body>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"
   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="{% static 'assets/js/global/integration/plugins/flickity.pkgd.min.js' %}"></script>
 <script src="https://js.stripe.com/v3/"></script>
-<script src="{% static 'static/assets/js/flickity.pkgd.min.js' %}"></script>
 <script type="text/javascript">
-  var stripe = Stripe('pk_live_XsOi0Z9NNJeNgoVeZSSYnuCP00rch8YqF9'); // use your test publishable key
-  var elements = stripe.elements();
-</script>
-
-
+	var stripe = Stripe('pk_live_XsOi0Z9NNJeNgoVeZSSYnuCP00rch8YqF9'); // use your test publishable key
+	var elements = stripe.elements();
+  </script>
 </html>
