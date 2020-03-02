@@ -19,8 +19,7 @@ $kt-header-item-hover-bg: rgba(#4d5995, 0.06);
 @include kt-desktop {
 	.kt-header {
 		background-color: kt-get($kt-layout-skins, light);
-    // border-bottom: 1px solid #eff0f6;
-    border-bottom: 2px solid #F3F5F9;
+		border-bottom: 2px solid #F3F5F9;
 
 		// Minimize
 		.kt-header--fixed:not(.kt-subheader--fixed) & {
