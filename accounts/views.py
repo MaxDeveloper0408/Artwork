@@ -329,8 +329,8 @@ class ProfileViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Profile.objects.get(user=request.user)
         serializer = ProfileSerializer(queryset)
-        result = {'status': 'success', 'data': serializer.data};
-        return Response(result);
+        result = {'status': 'success', 'data': serializer.data}
+        return Response(result)
 
     @action(['PUT'], False)
     def update_profile(self, request, *args, **kwargs):
@@ -391,13 +391,17 @@ class ProfileViewSet(viewsets.ViewSet):
             return Response(message, status=401)
 
     @action(['PUT'], False)
-    def updateimage(self, request, *args, **kwargs):
-        image = {'image': request.FILES.get('image')}
+    def update_avatar(self, request, *args, **kwargs):
+        image = {'image': request.FILES.get('avatar')}
         p_instance = Profile.objects.get(user=request.user)
         serializer = ProfileImageSerializer(p_instance, data=image, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data)
+            data = {'status': 'success', 'data': serializer.data}
+            return Response(data)
+        else:
+            error = {'status': 'error', 'message': 'invalid image'}
+            return Response(error, status=400)
 
 
 def activate(request, secret):
