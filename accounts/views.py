@@ -22,7 +22,13 @@ from requests_oauthlib import OAuth1Session
 
 resource_owner_key = ''
 resource_owner_secret = ''
-
+roles = {
+    1: 'Admin',
+    2: 'Artist',
+    4: 'Collector',
+    # 6: 'Artist & Collector',
+    # 7: 'Admin & Artist & Collector'
+}
 
 class Signup(viewsets.ViewSet):
     permission_classes = (AllowAny,)
@@ -38,8 +44,8 @@ class Signup(viewsets.ViewSet):
             'role': request.data.get('role'),
         }
 
-        # 0: Admin, 1: Artist, 2: Collector
-        valid_roles = [0, 1, 2]
+        # 1: Admin, 2: Artist, 4: Collector
+        valid_roles = roles.keys()
         form = SignupForm(form_data)
         messages = form.errors.get_json_data()
         message = ''
@@ -444,3 +450,51 @@ def activate(request, secret):
         return render(request, 'accounts/invalid_signup.html')
     else:
         return render(request, 'accounts/invalid_signup.html')
+
+
+class RoleViewSet(viewsets.ViewSet):
+    permission_classes = (AllowAny,)
+    http_method_names = ['get', 'put']
+
+
+    def list(self, request):
+        profile = Profile.objects.filter(user=request.user).values('role')
+        result = {'status': 'success', 'data': profile[0]['role']}
+        return Response(result)
+
+    @action(['GET'], False)
+    def get_all_roles(self, request):
+        values = [{"id": k, "title": v} for k, v in roles.items()]
+        result = {'status': 'success', 'data': values}
+        return Response(result)
+
+    def update_user_roles(self, request, *args, **kwargs):
+        password = request.data.get('password')
+        confirm_password = request.data.get('confirm_password')
+        form_data = {"new_password1": password, "new_password2": confirm_password}
+        change_password_form = SetPasswordForm(request.user, form_data)
+        if change_password_form.is_valid():
+            change_password_form.save()
+            message = {"status": True}
+            return Response(message)
+        else:
+            message = change_password_form.errors.get_json_data()
+            message['status'] = False
+            if message.get('new_password1'):
+                message['password'] = message.pop('new_password1')
+            message['confirm_password'] = message.pop('new_password2')
+
+            return Response(message, status=401)
+
+    @action(['PUT'], False)
+    def add_user_roles(self, request, *args, **kwargs):
+        image = {'image': request.FILES.get('avatar')}
+        p_instance = Profile.objects.get(user=request.user)
+        serializer = ProfileImageSerializer(p_instance, data=image, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            data = {'status': 'success', 'data': serializer.data}
+            return Response(data)
+        else:
+            error = {'status': 'error', 'message': 'invalid image'}
+            return Response(error, status=400)

@@ -10,6 +10,7 @@ router.register(r'login', views.Login, base_name='login'),
 router.register(r'forgot-password', views.ForgotPassword, base_name='forgot_password'),
 router.register(r'profile', views.ProfileViewSet, base_name='profile'),
 router.register(r'reset-password', views.ResetPassword, base_name='reset_password'),
+router.register(r'role', views.RoleViewSet, base_name='role'),
 
 urlpatterns = [
     path('', include(router.urls)),
