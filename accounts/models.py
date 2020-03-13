@@ -19,7 +19,7 @@ class BaseModel(models.Model):
 class Profile(BaseModel):
     roles = ((1, 'Admin'), (2, 'Artist'), (4, 'Collector'), (6, 'Artist & Collector'), (7, 'Admin & Artist & Collector'))
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.IntegerField(choices=roles, default=1, null=True)
+    role = models.IntegerField(choices=roles, default=4, null=True)
     activation_secret = models.CharField(max_length=200, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     primary_address = models.ForeignKey('Address', on_delete=models.SET_NULL, blank=True, null=True)
