@@ -19,16 +19,17 @@ class BaseModel(models.Model):
 class Profile(BaseModel):
     roles = ((1, 'Admin'), (2, 'Artist'), (4, 'Collector'), (6, 'Artist & Collector'), (7, 'Admin & Artist & Collector'))
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='profiles', default='profiles/avatar.png')
     role = models.IntegerField(choices=roles, default=4, null=True)
     phone = models.CharField(max_length=10, null=True)
     dob = models.DateField(auto_now=False, blank=True, null=True)
-    activation_secret = models.CharField(max_length=200, blank=True, null=True)
-    is_verified = models.BooleanField(default=False)
-    primary_address = models.ForeignKey('Address', on_delete=models.SET_NULL, blank=True, null=True)
     platform_fees = models.IntegerField(blank=True, null=True)
-    image = models.ImageField(upload_to='profiles', default='profiles/avatar.png')
+    primary_address = models.ForeignKey('Address', on_delete=models.SET_NULL, blank=True, null=True)
+    credit_card = models.ForeignKey('CreditCard', on_delete=models.SET_NULL, blank=True, null=True)
     social_id = models.CharField(max_length=256, blank=True, null=True)
     social_type = models.SmallIntegerField(blank=True, null=True)
+    activation_secret = models.CharField(max_length=200, blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.username}, {self.role}'
@@ -77,3 +78,11 @@ class Address(BaseModel):
 
     def __str__(self):
         return self.country
+
+
+class CreditCard(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    number = models.CharField(max_length=19)
+    exp_month = models.CharField(max_length=2)
+    exp_year = models.CharField(max_length=4)
+    cvv = models.CharField(max_length=3)
