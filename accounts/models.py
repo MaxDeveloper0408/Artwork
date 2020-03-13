@@ -75,6 +75,8 @@ class Address(BaseModel):
     zip_code = models.CharField(max_length=9)
     state = models.CharField(max_length=200)
     country = models.CharField(max_length=2, choices=COUNTRIES, default='IN')
+    address_line1 = models.TextField(default='', null=True)
+    address_line2 = models.TextField(default='', null=True)
 
     def __str__(self):
         return self.country
