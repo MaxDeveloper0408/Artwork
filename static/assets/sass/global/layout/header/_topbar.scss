@@ -144,6 +144,101 @@ $kt-header-topbar-user-avatar-size-mobile: 30px;
 			}
 		}
 
+		// Roles
+		&.kt-header__topbar-item--roles {
+			.kt-header__role-selector-toggle {
+				padding: 0 1.25rem;
+
+				&:hover,
+				&.show {
+					// background-color: $arttwork-background-color;
+					background-color: transparent;
+
+					.kt-header__topbar-icon {
+						background-color: transparent;
+						// background-color: $arttwork-background-color;
+					}
+				}
+
+				.kt-header__topbar-role-selctor-icon {
+					display: flex;
+					align-items: center;
+					align-self: center;
+					justify-content: center;
+					cursor: pointer;
+					transition: all .3s;
+					border-radius: 4px;
+					padding-right: 8px;
+					
+					i {
+						font-size: 1.25rem;
+						color: $arttwork-secondary-color;
+					}
+				}
+	
+				.kt-header__topbar-role-selector-text {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					font-weight: 600;
+					font-size: 1rem;
+					color: $arttwork-secondary-color;
+					min-width: 6rem;
+	
+					&:after {
+						text-align: center;
+						display: inline;
+						border: 0;
+						font-size: 0.6rem;
+						line-height: 0;
+						vertical-align: middle;
+						position: relative;
+						margin-left: 0.5rem#{'/*rtl:ignore*/'};
+						opacity: 0.7;
+				
+						//@include kt-arrow-icon(down, true);
+						@include kt-flaticon2-icon(kt-get($kt-action-bold-icons, down));
+					}
+				}
+			}
+
+			.dropdown-menu {
+				border: 1px solid $arttwork-background-color;
+				box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+				min-width: 10rem;
+
+				li {
+					padding: 0;
+
+					a.kt-nav__link {
+						padding: .75rem 1.25rem;
+
+						.kt-nav__link-icon {
+							padding-right: 8px;
+
+							i {
+								font-size: 1.25rem;
+							}
+						}
+		
+						.kt-nav__link-text {
+							color: $arttwork-secondary-color;
+							font-weight: 500;
+							font-size: 1rem;
+						}
+					}
+
+					&:hover {
+						a.kt-nav__link {
+							.kt-nav__link-text {
+								color: $arttwork-secondary-color;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		&:hover,
 		&.show {
 			.kt-header__topbar-icon {

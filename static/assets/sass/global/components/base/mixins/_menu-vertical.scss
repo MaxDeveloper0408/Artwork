@@ -260,6 +260,17 @@
 		transition: background-color 0.3s;
 		@include kt-attr(background-color, kt-get($item, self, bg-color, active));
 
+		&::before {
+			content: "";
+			position: absolute;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 4px;
+			height: 100%;
+			background-color: $arttwork-blue-family-color;
+		}
+
 		> .kt-menu__heading,
 		> .kt-menu__link {
 			@include kt-attr(background-color, kt-get($item, link, self, bg-color, active));

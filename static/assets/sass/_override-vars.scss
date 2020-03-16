@@ -27,8 +27,18 @@ $arttwork-google-color: #DB4437;
 
 /* normalize */
 * {
-  font-family: 'AvenirNextLTPro-Regular';
   font-weight: 500; // should specially define the font-weight value for the header elements
+  line-height: 1.2;
+}
+
+h1 {
+  font-weight: bold;
+}
+h2, h3, h4, h5 {
+  font-weight: 600;
+}
+h6 {
+  font-weight: 500;
 }
 
 input {
@@ -111,6 +121,28 @@ input {
   color: $arttwork-red-family-color;
 }
 
+.mat-select-value {
+  color: $arttwork-secondary-color;
+}
+
+.mat-option-text {
+  color: $arttwork-primary-color;
+}
+
+.mat-checkbox-frame {
+  border-color: $arttwork-secondary-color;
+}
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: $arttwork-secondary-color;
+}
+
+.mat-datepicker-toggle {
+  color: $arttwork-secondary-color;
+  &.mat-datepicker-toggle-active {
+    color: $arttwork-secondary-active-color;
+  }
+}
 /* arttwork component */
 .arttwork-card {
   background-color: #fff;
@@ -160,33 +192,87 @@ a.artwork-btn {
   }
 }
 
+.artwork-modal {
+  .modal-dialog {
+    .modal-content {
+      .modal-header {
+        border: none;
+        padding: 1.25rem;
+        .modal-title {
+          display: none;
+        }
+        .close {
+          float: none;
+          margin: 0;
+          padding: 0;
+          position: absolute;
+          height: auto;
+          right: 1.5rem;
+          top: 1.5rem;
+          line-height: 1;
+          font-size: 1rem;
+          &:before {
+            font-size: 1rem;
+          }
+        }
+      }
+      .modal-body {
+        padding: 0 2.5rem 2.5rem;
+      }
+      .modal-footer {
+        border: none;
+        padding: 2.5rem;
+      }
+    }
+  }
+}
+
 .ng-select.artwork {
-  min-width: 150px;
+  min-width: 100px;
   .ng-select-container, .ng-select-focused:not(.ng-select-opened)>.ng-select-container {
     background-color: #F4FAFE;
     border-radius: $arttwork-border-radius;
     border: 1px solid rgba(147, 175, 202, 0.12) !important;
     color: $arttwork-secondary-color;
     font-size: 14px;
-    box-shadow: none !important;
+    box-shadow: none;
+
+    .ng-value-container {
+      padding: 0 1rem;
+    }
+
+    .ng-value {
+      span {
+        margin-left: .875rem;
+      }
+    }
+    
+    .ng-arrow-wrapper {
+      padding: 0;
+    }
   }
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    padding: 0.5rem 1rem;
     color: $arttwork-secondary-color;
     font-size: 14px;
   }
   
   .ng-dropdown-panel.ng-select-bottom {
-    border: 1px solid rgba(147, 175, 202, 0.12);
+    margin-top: 0.5rem;
+    border: 1px solid $arttwork-background-color;
     background-color: #fff;
     border-radius: $arttwork-border-radius; //#f7f8fa
+    padding: 0.625rem 0;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
   }
 
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    color: $arttwork-primary-color;
     background-color: #f7f8fa;
   }
-  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked {
-    background-color: #f7f8fa;
-  }
+  // .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+  //   background-color: #f7f8fa;
+  // }
 
   .ng-arrow-wrapper .ng-arrow {
     border-color: $arttwork-secondary-color transparent transparent;
@@ -206,6 +292,9 @@ a.artwork-btn {
         background-color: $arttwork-background-color !important;
         border: 1px solid transparent !important;
         font-size: 12px;
+        .ng-value-container {
+          padding: 0 .2rem;
+        }
       }
       .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
         color: $arttwork-secondary-color;
@@ -260,5 +349,53 @@ ul {
         color: $arttwork-brand-color;
       }
     }
+  }
+}
+
+.kt-portlet.artwork-portlet.bill-portlet-left {
+  .kt-portlet__head {
+    padding: 90px 50px 30px 50px;
+
+    .kt-portlet__head-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .kt-portlet__body {
+    padding: 40px 50px;
+  }
+
+  h4 {
+      margin-bottom: 2.5rem;
+  }
+}
+
+.kt-portlet.artwork-portlet.bill-portlet-right {
+  .kt-portlet__head {
+    padding: 90px 34px 30px 34px;
+
+    .kt-portlet__head-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .kt-portlet__body {
+    padding: 34px 30px;
+  }
+
+  h4 {
+    margin-bottom: 1.875rem;
+  }
+}
+
+// I wonder if this is correct but no way
+@media (max-width: 1024px) {
+  .mat-select-trigger {
+    height: 1.75em !important;
+  }
+}
+@media (min-width: 1024px) {
+  .mat-select-trigger {
+    height: 1.25em !important;
   }
 }

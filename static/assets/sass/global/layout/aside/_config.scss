@@ -96,7 +96,7 @@ $kt-aside-config: (
 							icon:	(
 								width: 30px, //35px,
 								svg-width: 16px,
-								font-size: 14px
+								font-size: 18px //14px
 							),
 
 							// link bullet
@@ -860,7 +860,8 @@ $kt-aside-config: (
 								// link text
 								text:	(
 									font-color:	(
-										default: darken(#3d4465, 6%),
+										// default: darken(#3d4465, 6%),
+										default: $arttwork-secondary-color,
 										open: kt-brand-color(),
 										here: kt-brand-color(),
 										active: kt-brand-color(),
