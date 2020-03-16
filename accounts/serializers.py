@@ -31,7 +31,7 @@ class ProfileSerializer(ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['username', 'email', 'first_name', 'last_name', 'role', 'primary_address', 'platform_fees', 'image']
+        fields = ['username', 'email', 'first_name', 'last_name', 'user_id', 'role', 'primary_address', 'platform_fees', 'image']
         read_only_fields = ('image', 'platform_fees')
 
     def get_platform_fees(self, obj):
