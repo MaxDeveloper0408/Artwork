@@ -78,23 +78,7 @@ def send_buy_link(to, subject, link):
     text = f'{link}'
     html = f'<a href="{link}">Buy</a>'
 
-    message = Mail(
-        from_email=EMAIL_FROM,
-        to_emails=to,
-        subject=subject,
-        html_content=html)
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-
-        print("Response status code: " + str(response.status_code))
-        if response.status_code == 202:
-            return True
-        else:
-            return False
-
-    except Exception as e:
-        print("*************** Error ****************\n")
-        traceback.print_exc()
-        print("**************************************\n")
-        return False
+    from_email = EMAIL_FROM
+    msg = EmailMultiAlternatives(subject, text, from_email, [to])
+    msg.attach_alternative(html, "text/html")
+    msg.send()
