@@ -96,7 +96,8 @@
                 width: 460px;
                 max-width: 460px;
                 min-height: 540px;
-                padding: 40px;
+                padding: 2.5rem;
+
                 .kt-login__title {
                     display: block;
                     text-align: left;
@@ -219,16 +220,18 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-top: 5rem;
 
                 .kt-login__form {
-                    .kt-login__options {
-                        > a {
-                            &:not(:first-child):not(:last-child) {
-                                margin: 0 0.8rem;
-                            }
+                    padding: 2rem;
+                    
+                    .kt-login__actions {
+                        .col-md-6 {
+                            margin-bottom: .5rem;
                         }
                     }
+                }
+                .kt-login__aside-image-container {
+                    display: none;
                 }
             }
         }
