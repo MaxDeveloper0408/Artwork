@@ -194,17 +194,26 @@ class ProductViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def emaillink(self,request,*args,**kwargs):
         link = request.data.get('link')
-        if not link:
-            return Response({'status': False,'message':'Link not found'}, status=401)
-        recipient = request.data.get('recipient')
+        email = request.data.get('email')
+        # user_id = request.data.get('user_id')
+        # product_id = request.data.get('product_id')
+        # amount = request.data.get('amount')
+        # tags = request.data.get('tags')
+        # message = request.data.get('message')
 
-        if not recipient:
-            return Response({"error": "Please Provide recipient email."})
+        if not link:
+            return Response({'status': 'error', 'message': 'Link should not be empty.'}, status=400)
+
+        if not email:
+            return Response({'status': 'error', 'message': 'Email should not be empty.'}, status=400)
+
         try:
-            send_buy_link(recipient, 'Aartcy buy product', link)
-            return Response({'status': True})
+            if send_buy_link(email, 'Arttwork Buy Product', link):
+                return Response({'status': 'success'})
+            else:
+                return Response({'status': 'error', 'message': 'Sending email failed.'}, status=405)
         except:
-            return Response({'status': False}, status=401)
+            return Response({'status': 'error', 'message': 'Exception occurred.'}, status=406)
 
     @action(detail=False, methods=['get'])
     def search(self,request,*args,**kwargs):
