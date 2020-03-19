@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from Aartcy.utils import unique_slug
 
+
 class BaseModel(models.Model):
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
@@ -11,14 +12,13 @@ class BaseModel(models.Model):
 
 
 class Category(BaseModel):
-
-    name  = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='categories',blank=True,null=True)
-    slug  = models.SlugField(unique=True,blank=True,null=True)
+    name = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='categories', blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = unique_slug(Category,self.name)
+            self.slug = unique_slug(Category, self.name)
             super(Category, self).save(*args, **kwargs)
         else:
             super(Category, self).save(*args, **kwargs)
@@ -31,40 +31,28 @@ class Category(BaseModel):
 
 
 class Tag(BaseModel):
-    name = models.CharField(max_length=200,unique=True)
+    name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(unique=True, blank=False, null=True)
 
     def __str__(self):
         return self.name
-
-
-    def save(self, *args,**kwargs):
-        self.name = str(self.name).lower().strip()
-        super(Tag,self).save(*args,**kwargs)
 
 
 class Product(BaseModel):
+    status_choices = (('I', 'Inactive'), ('A', 'Active'))
+    currency_choices = (('usd', 'USD'), ('eur', 'EUR'))
 
-    user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='Artist')
     name = models.CharField(max_length=200)
-    price = models.FloatField()
-    description = models.TextField()
-    category = models.ManyToManyField(Category)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True)
+    currency = models.CharField(max_length=3, choices=currency_choices, default='usd')
+    price = models.FloatField(default=0)
+    description = models.TextField(default='', blank=True, null=True)
     image = models.ImageField(upload_to='products', blank=True, null=True)
-    status_choices = (('I','Inactive'),('A','Active'))
-    status = models.CharField(max_length=1,choices=status_choices,default='I')
-    tags = models.ManyToManyField(Tag)
-
+    status = models.CharField(max_length=1, choices=status_choices, default='A')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Artist')
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = unique_slug(Product,self.name)
-            super(Product, self).save(*args, **kwargs)
-        else:
-            super(Product, self).save(*args, **kwargs)
 
 
 class OrderQuerySet(models.QuerySet):
@@ -79,24 +67,18 @@ class OrderQuerySet(models.QuerySet):
 
 
 class Order(BaseModel):
+    order_status = (('C', 'Complete'), ('I', 'Incomplete'), ('F', 'Failed'), ('R', 'Refund'), ('D', 'Chargebacks'))
+    by_options = (('O', 'On Site'), ('L', 'By Email Link'),)
+    currency_options = (('usd', 'USD'), ('eur', 'EUR'))
 
-    order_status = (('C','Complete'),('I','Incomplete'),('F','Failed'))
-    by_options = (('O','On Site'),('L','By Email Link'),)
-    email = models.EmailField()
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
-    status = models.CharField(max_length=1,choices=order_status,default='I')
-    data = models.TextField(blank=True,null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    currency = models.CharField(max_length=3, choices=currency_options, default='usd')
     price = models.IntegerField()
-    slug = models.SlugField(unique=True,blank=True,null=True)
-    address = models.TextField(default='{}')
-    by = models.CharField(max_length=1,choices=by_options,default='O')
-    transaction_fees = models.IntegerField(default=0)
-    objects = OrderQuerySet.as_manager()
+    fees = models.IntegerField(default=0)
+    collector = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Collector')
+    tags = models.ManyToManyField(Tag)
+    by = models.CharField(max_length=1, choices=by_options, default='O')
+    status = models.CharField(max_length=1, choices=order_status, default='I')
 
     def __str__(self):
         return self.product.name
-
-
-
-
-

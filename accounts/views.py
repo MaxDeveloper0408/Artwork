@@ -10,8 +10,6 @@ from rest_framework.response import Response
 from .forms import SignupForm, AuthenticationForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render, HttpResponse
-from django.http import JsonResponse
-from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 from payments.models import PaymentMethod
 from google.oauth2 import id_token

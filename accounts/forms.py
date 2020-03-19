@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.forms import ModelForm
+from .models import Address, CreditCard, Profile
 
 
 class SignupForm(UserCreationForm):
@@ -21,3 +23,21 @@ class SignupForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class AddressForm(ModelForm):
+    class Meta:
+        model = Address
+        fields = ['city', 'state', 'country', 'address_line1', 'address_line2']
+
+
+class CreditCardForm(ModelForm):
+    class Meta:
+        model = CreditCard
+        fields = ['number', 'exp_month', 'exp_year', 'cvv']
+
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
