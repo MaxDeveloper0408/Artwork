@@ -339,7 +339,7 @@ class ProfileViewSet(viewsets.ViewSet):
     @action(['PUT'], False)
     def update_profile(self, request, *args, **kwargs):
         mutable_data = request.data
-        primary_address = request.data.get('primary_address')
+        # primary_address = request.data.get('primary_address')
         print(mutable_data)
 
         u_serializer = UserSerializer(request.user, data=mutable_data, partial=True)
@@ -349,11 +349,11 @@ class ProfileViewSet(viewsets.ViewSet):
         p_serializer = ProfileSerializer(p_instance, data=mutable_data, partial=True)
         p_serializer.is_valid(raise_exception=True)
 
-        if primary_address:
+        address = Address.objects.get(user=request.user)
+
+        if address:
             try:
-                address = Address.objects.get(id=primary_address)
                 if address.user.id == request.user.id:
-                    address = Address.objects.get(user=request.user)
                     a_serializer = AddressSerializer(address, data=mutable_data, partial=True)
                     a_serializer.is_valid(raise_exception=True)
 

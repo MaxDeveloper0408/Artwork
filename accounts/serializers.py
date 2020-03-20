@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from settings.models import StripeSetting
 from .models import *
+from rest_framework import serializers
 
 
 class UserSerializer(ModelSerializer):
@@ -12,7 +13,7 @@ class UserSerializer(ModelSerializer):
 class AddressSerializer(ModelSerializer):
     class Meta:
         model = Address
-        fields = ['street', 'city', 'zip_code', 'state', 'country', 'address_line1', 'address_line2']
+        fields = ['id', 'street', 'city', 'zip_code', 'state', 'country', 'address_line1', 'address_line2']
 
 
 class CountrySerializer(ModelSerializer):
@@ -28,6 +29,7 @@ class ProfileSerializer(ModelSerializer):
     last_name = SerializerMethodField('get_last_name')
     platform_fees = SerializerMethodField('get_platform_fees')
     primary_address = AddressSerializer(read_only=True)
+    dob = serializers.DateField(format="%m/%d/%Y")
 
     class Meta:
         model = Profile
