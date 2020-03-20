@@ -339,18 +339,11 @@ class ProfileViewSet(viewsets.ViewSet):
     @action(['PUT'], False)
     def update_profile(self, request, *args, **kwargs):
         mutable_data = request.data
-        username = mutable_data.pop('username', False)
-        password = mutable_data.pop('password', False)
         primary_address = request.data.get('primary_address')
-
-        if username:
-            raise ValidationError(detail={"username": ["Username cannot be changed."]})
-        if password:
-            raise ValidationError(detail={"password": ["Use Password api end point to change password."]})
+        print(mutable_data)
 
         u_serializer = UserSerializer(request.user, data=mutable_data, partial=True)
         u_serializer.is_valid(raise_exception=True)
-        u_serializer.save()
 
         p_instance = Profile.objects.get(user=request.user)
         p_serializer = ProfileSerializer(p_instance, data=mutable_data, partial=True)
@@ -359,21 +352,29 @@ class ProfileViewSet(viewsets.ViewSet):
         if primary_address:
             try:
                 address = Address.objects.get(id=primary_address)
-                if address.user.username == request.user.username:
+                if address.user.id == request.user.id:
+                    address = Address.objects.get(user=request.user)
+                    a_serializer = AddressSerializer(address, data=mutable_data, partial=True)
+                    a_serializer.is_valid(raise_exception=True)
+
+                    u_serializer.save()
+                    a_serializer.save()
                     p_serializer.save(primary_address=address)
                 else:
-                    raise ValidationError(detail={"primary_address": ["Address does not belong to you."]})
+                    raise ValidationError(detail={"status": "error", "message": "Address does not belong to you."})
             except Address.DoesNotExist as e:
-                raise ValidationError(detail={"primary_address": [str(e)]})
+                raise ValidationError(detail={"status": "error", "message": "Address matching does not exist."})
         else:
             address = Address.objects.create(user=request.user)
             address.save()
             a_serializer = AddressSerializer(address, data=mutable_data, partial=True)
             a_serializer.is_valid(raise_exception=True)
+
+            u_serializer.save()
             a_serializer.save()
             p_serializer.save(primary_address=address)
 
-        return Response(p_serializer.data)
+        return Response({'status': 'success', 'data': p_serializer.data})
 
     @action(['PUT'], False)
     def change_password(self, request, *args, **kwargs):

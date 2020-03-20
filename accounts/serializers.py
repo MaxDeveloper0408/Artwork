@@ -12,7 +12,7 @@ class UserSerializer(ModelSerializer):
 class AddressSerializer(ModelSerializer):
     class Meta:
         model = Address
-        fields = ['phone', 'street', 'city', 'zip_code', 'state', 'country']
+        fields = ['street', 'city', 'zip_code', 'state', 'country', 'address_line1', 'address_line2']
 
 
 class CountrySerializer(ModelSerializer):
@@ -31,7 +31,8 @@ class ProfileSerializer(ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['username', 'email', 'first_name', 'last_name', 'user_id', 'role', 'primary_address', 'platform_fees', 'image']
+        fields = ['username', 'email', 'first_name', 'last_name', 'user_id', 'role', 'primary_address',
+                  'phone', 'dob', 'platform_fees', 'image']
         read_only_fields = ('image', 'platform_fees')
 
     def get_platform_fees(self, obj):
