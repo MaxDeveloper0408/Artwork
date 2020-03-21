@@ -13,7 +13,13 @@ class UserSerializer(ModelSerializer):
 class AddressSerializer(ModelSerializer):
     class Meta:
         model = Address
-        fields = ['id', 'street', 'city', 'zip_code', 'state', 'country', 'address_line1', 'address_line2']
+        fields = ['id', 'city', 'zip_code', 'state', 'country', 'address_line1', 'address_line2']
+
+
+class CreditCardSerializer(ModelSerializer):
+    class Meta:
+        model = CreditCard
+        fields = '__ALL__'
 
 
 class CountrySerializer(ModelSerializer):
@@ -30,11 +36,13 @@ class ProfileSerializer(ModelSerializer):
     platform_fees = SerializerMethodField('get_platform_fees')
     primary_address = AddressSerializer(read_only=True)
     dob = serializers.DateField(format="%m/%d/%Y")
+    credit_card = CreditCardSerializer(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['username', 'email', 'first_name', 'last_name', 'user_id', 'role', 'primary_address',
-                  'phone', 'dob', 'platform_fees', 'image']
+        fields = ['username', 'email', 'first_name', 'last_name', 'user_id', 'image', 'phone', 'dob', 'role',
+                  'platform_fees', 'primary_address', 'credit_card'
+                  ]
         read_only_fields = ('image', 'platform_fees')
 
     def get_platform_fees(self, obj):

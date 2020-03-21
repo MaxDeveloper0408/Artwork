@@ -7,6 +7,9 @@ from rest_framework.decorators import action
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework import filters
+
 from .forms import SignupForm, AuthenticationForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.shortcuts import render, HttpResponse
@@ -325,6 +328,22 @@ class ResetPassword(viewsets.ViewSet):
                 return Response({'status': 'error', 'message': 'Invalid token'}, status=401)
 
         return Response({'status': 'error', 'message': 'Invalid request'}, status=401)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfileSerializer
+    pagination_class = LimitOffsetPagination
+    pagination_class.default_limit = 10
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['user__username', 'user__email', 'user__first_name', 'user__last_name']
+
+    def get_queryset(self):
+        queryset = Profile.objects.all().exclude(user=self.request.user)
+        role = self.request.query_params.get('role', None)
+        if role is not None:
+            print('Collector requiring')
+            queryset = queryset.filter(role=role)
+        return queryset
 
 
 class ProfileViewSet(viewsets.ViewSet):

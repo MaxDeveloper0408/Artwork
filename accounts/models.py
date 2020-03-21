@@ -21,8 +21,8 @@ class Profile(BaseModel):
         (1, 'Admin'), (2, 'Artist'), (4, 'Collector'), (6, 'Artist & Collector'), (7, 'Admin & Artist & Collector'))
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='profiles', default='profiles/avatar.png')
-    role = models.IntegerField(choices=roles, default=4)
-    phone = models.CharField(max_length=10, blank=True, null=True)
+    role = models.IntegerField(choices=roles, default=2)
+    phone = models.CharField(max_length=15, blank=True, null=True)
     dob = models.DateField(auto_now=False, blank=True, null=True)
     platform_fees = models.IntegerField(blank=True, null=True)
     primary_address = models.ForeignKey('Address', on_delete=models.SET_NULL, blank=True, null=True)
@@ -71,13 +71,12 @@ def save_profile(sender, instance, **kwargs):
 
 class Address(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    street = models.TextField()
     city = models.CharField(max_length=200)
     zip_code = models.CharField(max_length=9)
     state = models.CharField(max_length=200)
     country = models.CharField(max_length=2, choices=COUNTRIES, default='IN')
-    address_line1 = models.TextField(blank=True, null=True)
-    address_line2 = models.TextField(default='', null=True)
+    address_line1 = models.TextField()
+    address_line2 = models.TextField(default='', blank=True, null=True)
 
     def __str__(self):
         return self.country

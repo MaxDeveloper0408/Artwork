@@ -7,6 +7,7 @@ class OrderForm(ModelForm):
     class Meta:
         model = Order
         fields = '__all__'
+        exclude = ['product', 'collector']
 
 
 class ProductPaymentForm(ModelForm):

@@ -8,17 +8,15 @@ from .forms import ProductPaymentForm, OrderForm
 from accounts.mailers import send_buy_link
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
-from rest_framework.authentication import BasicAuthentication, TokenAuthentication
-from rest_framework import permissions
+from rest_framework import filters
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     pagination_class = LimitOffsetPagination
     pagination_class.default_limit = 10
-
-    # authentication_classes = (TokenAuthentication, BasicAuthentication)
-    # permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'slug', 'description']
 
     def get_queryset(self):
         return Product.objects.filter(user=self.request.user)

@@ -59,10 +59,12 @@ class Checkout(APIView):
             signup_form = SignupForm(signup_data)
             if signup_form.is_valid():
                 collector = signup_form.save()  # at this point, the relation table(OneToOne, OneToMany Models created)
-                profile = collector.profile
+
+                print('collector id', collector.id)
                 address_data = {
                     'city': payment_info.get('city'),
                     # 'zip_code': payment_info.get('postCode'),
+                    'zip_code': ' ',
                     'state': payment_info.get('state'),
                     'country': payment_info.get('country'),
                     'address_line1': payment_info.get('addressLine1'),
@@ -73,67 +75,79 @@ class Checkout(APIView):
                     'number': payment_info.get('creditCardNumber'),
                     'exp_month': payment_info.get('exp_month'),
                     'exp_year': payment_info.get('exp_year'),
-                    'cvv': payment_info.get('cvv')
+                    'cvv': payment_info.get('cvv'),
                 }
 
-                address_form = AddressForm(data=address_data, instance=profile.address)
-                if address_data.is_valid():
-                    address_form.save()
+                address_form = AddressForm(data=address_data)
+                if address_form.is_valid():
+                    address = address_form.save(commit=False)
+                    address.user = collector
+                    address.save()
                 else:
+                    print(address_form.errors.get_json_data())
                     return Response(APIResponse.error(message='Invalid address information', code=-3002), status=201)
 
-                credit_card_form = CreditCardForm(data=credit_card_data, instance=profile.credit_card)
+                credit_card_form = CreditCardForm(data=credit_card_data)
                 if credit_card_form.is_valid():
-                    credit_card_form.save()
+                    credit_card = credit_card_form.save(commit=False)
+                    credit_card.user = collector
+                    credit_card.save()
                 else:
+                    print(credit_card_form.errors.get_json_data())
                     return Response(APIResponse.error(message='Invalid credit card information', code=-3002),
                                     status=201)
 
                 activation_secret = auth.makesecret(signup_data['username'])
                 profile_data = {
-                    'role': payment_info.get('role'),
+                    'role': 4,
                     'phone': payment_info.get('phone'),
                     'dob': payment_info.get('dob'),
-                    'primary_address': profile.address.id,
-                    'credit_card': profile.credit_card.id,
                     'activation_secret': activation_secret,
                 }
 
-                profile_form = ProfileForm(data=profile_data, instance=profile)
+                profile_form = ProfileForm(data=profile_data, instance=collector.profile)
                 if profile_form.is_valid():
+                    profile = profile_form.save(commit=False)
+                    profile.primary_address = address
+                    profile.credit_card = credit_card
+                    profile.user = collector
+                    profile.save()
                     if send_registration_notification(email) is False:
                         return Response(APIResponse.error(
                             message='An error occurred while sending registration notification email to the collector',
                             code=-3002), status=500)
                 else:
-                    return Response(APIResponse.error(message='', code=-3002), status=2001)
+                    print(profile_form.errors.get_json_data())
+                    return Response(APIResponse.error(message='Invalid profile information', code=-3002), status=201)
             else:
+                print(signup_form.errors.get_json_data())
                 return Response(APIResponse.error(message='Invalid collector information', code=-3003), status=201)
 
         tag_list = []
         for iterator in payment_info.get('tags'):
             query_set = Tag.objects.filter(slug=iterator.get('slug'))
             if len(query_set) == 0:  # exist the tag in Tags table
-                tag = Tag.objects.create(name=tag.get('name'), slug=tag.get('slug'))
+                tag = Tag.objects.create(name=iterator.get('name'), slug=iterator.get('slug'))
             else:
                 tag = query_set[0]
-            tag_list.append(tag.id)
-
+            tag_list.append(tag)
+        print('Tag List', tag_list)
         order_data = {
-            'product': product.id,
             'currency': payment_info.get('currency'),
             'price': payment_info.get('price'),
-            'collector': collector.id,
-            'tags': tag_list
+            'by': payment_info.get('by')
         }
 
         order_form = OrderForm(order_data)
         if order_form.is_valid():
             order = order_form.save(commit=False)
+            order.product = product
+            order.collector = collector
             order.save()
-            order_form.save_m2m()
+            order.tags.set(tag_list)
         else:
-            Response(APIResponse.error('Invalid order information', code=-3002), status=201)
+            print(order_form.errors.get_json_data())
+            return Response(APIResponse.error('Invalid order information', code=-3002), status=201)
 
         return Response({'status': 'success', 'data': 'Charge Now invoked'})
 

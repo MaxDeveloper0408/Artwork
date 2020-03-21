@@ -11,6 +11,7 @@ router.register(r'forgot-password', views.ForgotPassword, base_name='forgot_pass
 router.register(r'profile', views.ProfileViewSet, base_name='profile'),
 router.register(r'reset-password', views.ResetPassword, base_name='reset_password'),
 router.register(r'role', views.RoleViewSet, base_name='role'),
+router.register(r'list', views.UserViewSet, base_name='list'),
 
 urlpatterns = [
     path('', include(router.urls)),
