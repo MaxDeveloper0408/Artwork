@@ -1,6 +1,7 @@
 from . import auth
 from .mailers import *
 from .serializers import *
+from payments.serializers import PaymentMethodSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.decorators import action
@@ -350,9 +351,17 @@ class ProfileViewSet(viewsets.ViewSet):
     http_method_names = ['get', 'put']
 
     def list(self, request):
+        # profile data
         queryset = Profile.objects.get(user=request.user)
         serializer = ProfileSerializer(queryset)
-        result = {'status': 'success', 'data': serializer.data}
+        user_data = serializer.data
+
+        # payment method data
+        queryset = PaymentMethod.objects.get(user=request.user)
+        payment_method_serializer = PaymentMethodSerializer(queryset)
+        user_data.update({'payment_method': payment_method_serializer.data})
+
+        result = {'status': 'success', 'data': user_data}
         return Response(result)
 
     @action(['PUT'], False)

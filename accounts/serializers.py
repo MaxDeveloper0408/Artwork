@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
+
 from settings.models import StripeSetting
 from .models import *
 from rest_framework import serializers
@@ -41,8 +42,7 @@ class ProfileSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = ['username', 'email', 'first_name', 'last_name', 'user_id', 'image', 'phone', 'dob', 'role',
-                  'platform_fees', 'primary_address', 'credit_card'
-                  ]
+                  'platform_fees', 'primary_address', 'credit_card']
         read_only_fields = ('image', 'platform_fees')
 
     def get_platform_fees(self, obj):
