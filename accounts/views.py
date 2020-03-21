@@ -352,14 +352,15 @@ class ProfileViewSet(viewsets.ViewSet):
 
     def list(self, request):
         # profile data
-        queryset = Profile.objects.get(user=request.user)
-        serializer = ProfileSerializer(queryset)
+        profile = Profile.objects.get(user=request.user)
+        serializer = ProfileSerializer(profile)
         user_data = serializer.data
 
         # payment method data
-        queryset = PaymentMethod.objects.get(user=request.user)
-        payment_method_serializer = PaymentMethodSerializer(queryset)
-        user_data.update({'payment_method': payment_method_serializer.data})
+        payment_method = PaymentMethod.objects.filter(user=request.user)
+        if payment_method:
+            payment_method_serializer = PaymentMethodSerializer(payment_method)
+            user_data.update({'payment_method': payment_method_serializer.data})
 
         result = {'status': 'success', 'data': user_data}
         return Response(result)
@@ -377,7 +378,7 @@ class ProfileViewSet(viewsets.ViewSet):
         p_serializer = ProfileSerializer(p_instance, data=mutable_data, partial=True)
         p_serializer.is_valid(raise_exception=True)
 
-        address = Address.objects.get(user=request.user)
+        address = Address.objects.filter(user=request.user)
 
         if address:
             try:
