@@ -1,3 +1,5 @@
+from accounts.models import Profile
+from accounts.serializers import ProfileSerializer
 from .serializers import *
 from django.conf import settings
 from rest_framework import viewsets
@@ -20,6 +22,27 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Product.objects.filter(user=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def get_bill_info(self, request, *args, **kwargs):
+        product_id = request.data.get('product_id')
+        user_id = request.data.get('user_id')
+
+        product = Product.objects.filter(id=product_id)
+        if not product.exists():
+            raise ValidationError(detail={"status": "error", "message": "No matching product."})
+
+        profile = Profile.objects.filter(user_id=user_id)
+        if not profile.exists():
+            raise ValidationError(detail={"status": "error", "message": "No matching artist."})
+
+        product_serializer = ProductSerializer(product[0])
+        profile_serializer = ProfileSerializer(profile[0])
+        print(product_serializer.data)
+        print(profile_serializer.data)
+        data = {'product': product_serializer.data, 'profile': profile_serializer.data}
+
+        return Response({'status': 'success', 'data': data})
 
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
