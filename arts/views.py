@@ -25,8 +25,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_bill_info(self, request, *args, **kwargs):
-        product_id = request.data.get('product_id')
-        user_id = request.data.get('user_id')
+        product_id = request.query_params.get('product_id')
+        user_id = request.query_params.get('user_id')
 
         product = Product.objects.filter(id=product_id)
         if not product.exists():
@@ -38,8 +38,6 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         product_serializer = ProductSerializer(product[0])
         profile_serializer = ProfileSerializer(profile[0])
-        print(product_serializer.data)
-        print(profile_serializer.data)
         data = {'product': product_serializer.data, 'profile': profile_serializer.data}
 
         return Response({'status': 'success', 'data': data})
