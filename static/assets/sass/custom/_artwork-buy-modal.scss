@@ -66,6 +66,8 @@
       border: none;
       background-color: $arttwork-background-color;
       font-size: .875rem !important;
+      padding: 1rem;
+      height: calc(2rem + 1rem);
       &::placeholder {
         font-size: .875rem !important;
       }

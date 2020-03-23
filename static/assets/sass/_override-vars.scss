@@ -18,6 +18,9 @@ $arttwork-brand-active-color: #3476F3;
 $arttwork-secondary-hover-color: rgba(147, 175, 202, 0.8);
 $arttwork-secondary-active-color: #82A1BE;
 
+$arttwork-green-family-hover-color: #1DD484;
+$arttwork-green-family-active-color: #0FA362;
+
 $arttwork-border-color: $arttwork-secondary-color;
 $arttwork-border-radius: 6px;
 
@@ -82,6 +85,18 @@ input {
   }
 }
 
+.btn-green {
+  background-color: $arttwork-green-family-color;
+  &:hover, &:focus {
+    color: #fff;
+    background-color: $arttwork-green-family-hover-color !important;
+  }
+  &:active {
+    color: #fff !important;
+    background-color: $arttwork-green-family-active-color !important;  
+  }
+}
+
 .btn-facebook:hover {
   background-color: rgba(66, 103, 178, 0.8);
   border-color: rgba(66, 103, 178, 0.5);
@@ -117,16 +132,18 @@ input {
   background-color: $arttwork-brand-color !important;
 }
 
-.mat-error {
-  color: $arttwork-red-family-color;
-}
-
-.mat-select-value {
-  color: $arttwork-secondary-color;
-}
-
-.mat-option-text {
-  color: $arttwork-primary-color;
+.mat-select {
+  .mat-error {
+    color: $arttwork-red-family-color;
+  }
+  
+  .mat-select-value {
+    color: $arttwork-secondary-color;
+  }
+  
+  .mat-option-text {
+    color: $arttwork-primary-color;
+  }
 }
 
 .mat-checkbox-frame {
@@ -313,6 +330,12 @@ a.artwork-btn {
 .kt-portlet.artwork-portlet {
    .kt-portlet__head {
      padding: 25px 25px 0 25px;
+   }
+
+   &.has-see-all {
+     .kt-portlet__body {
+       justify-content: space-between;
+     }
    }
 }
 

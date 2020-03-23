@@ -78,7 +78,7 @@
             }
 
             .kt-login__signup-link {
-                color: kt-brand-color();
+                color: $arttwork-primary-color;
             }
         }
 
@@ -145,6 +145,19 @@
                     margin: 60px 0 30px 0 !important;
                     .kt-login__link-forgot {
                         @include kt-link-color(kt-base-color(label, 2), kt-brand-color());
+                    }
+
+                    .kt-login__options-container {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-end;
+                        align-items: flex-end;
+                    }
+
+                    .stripe-connected {
+                        display: flex;
+                        justify-content: center;
+                        cursor: auto;
                     }
                 }
 

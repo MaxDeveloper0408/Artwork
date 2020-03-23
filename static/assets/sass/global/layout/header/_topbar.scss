@@ -24,6 +24,11 @@ $kt-header-topbar-user-avatar-size-mobile: 30px;
 		display: flex;
 		align-items: stretch;
 		margin: 0;
+		margin-right: 2.5rem;
+
+		&.kt-header__topbar-item-logout {
+			margin-right: 0 ;
+		}
 
 		.kt-header__topbar-wrapper {
 			cursor: pointer;
@@ -183,7 +188,6 @@ $kt-header-topbar-user-avatar-size-mobile: 30px;
 					font-weight: 600;
 					font-size: 1rem;
 					color: $arttwork-secondary-color;
-					min-width: 6rem;
 	
 					&:after {
 						text-align: center;
@@ -337,6 +341,30 @@ $kt-header-topbar-user-avatar-size-mobile: 30px;
 					}
 				}
 			}		
+		}
+
+		.kt-header__topbar-item-logout.kt-header__topbar-item {
+			margin-right: 0 !important;
+		}
+	}
+}
+
+@include kt-mobile-sm {
+	.kt-header__topbar {
+		.kt-header__topbar-item {
+			margin-right: 1.5rem;
+	
+			&.kt-header__topbar-item-logout {
+				margin-right: 0 ;
+			}
+
+			&.kt-header__topbar-item--roles {
+				.kt-header__topbar-role-selector-text {
+					.kt-header__topbar-role-selector-title {
+						display: none;
+					}
+				}
+			}
 		}
 	}
 }
