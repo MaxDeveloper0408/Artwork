@@ -438,32 +438,55 @@ class ProfileViewSet(viewsets.ViewSet):
             return Response(error, status=400)
 
 
+class Activate(viewsets.ViewSet):
+    http_method_names = ['post']
+    permission_classes = (AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        # activate user  Profile
+        # check jwt and extract data
+        secret = request.data.get('token')
+        data = auth.check_jwt(secret)
+        if data:
+            # if data is available
+            # get username from data
+            user = User.objects.get(username=data['username'])
+            # get profile object of user
+            AccountObj = Profile.objects.get(user=user)
+
+            if AccountObj.is_verified:
+                return Response({'status': 'success', 'message': 'Your email has already been activated.'})
+
+            # if key matches to token
+            if AccountObj.activation_secret == data['key']:
+                # create another token
+                AccountObj.activation_secret = auth.makesecret()
+                AccountObj.is_verified = True
+                user.save()
+                AccountObj.save()
+
+                return Response({'status': 'success', 'message': 'Your email has activated successfully.'})
+
+            return Response({'status': 'error', 'message': 'invalid token'}, status=400)
+        else:
+            return Response({'status': 'error', 'message': 'invalid token'}, status=400)
+
+
+@api_view()
+@permission_classes([AllowAny])
 def activate(request, secret):
-    """
-    Activate user Profile
-
-    Models and views are using in this View :
-
-    1 if jwt and extract data is equalto fasle
-        * Renders HTML Template ( accounts/invalid_signup.htm )
-
-    2 if jwt and extract data is equalto fasle
-        * HttpResponse ( Activated )
-
-    1 Models:
-      * Profile : :model:`accounts.Profile`
-
-
-    """
     # activate user  Profile
     # check jwt and extract data
     data = auth.check_jwt(secret)
     if data:
         # if data is available
-        # get usrname from data
+        # get username from data
         user = User.objects.get(username=data['username'])
         # get profile object of user
         AccountObj = Profile.objects.get(user=user)
+
+        if AccountObj.is_verified:
+            return Response({'status': 'success', 'message': 'Your email has already been activated.'})
 
         # if key matches to token
         if AccountObj.activation_secret == data['key']:
@@ -473,11 +496,11 @@ def activate(request, secret):
             user.save()
             AccountObj.save()
 
-            return HttpResponse('Activated')
+            return Response({'status': 'success', 'message': 'Your email has activated successfully.'})
 
-        return render(request, 'accounts/invalid_signup.html')
+        return Response({'status': 'error', 'message': 'invalid token'}, status=400)
     else:
-        return render(request, 'accounts/invalid_signup.html')
+        return Response({'status': 'error', 'message': 'invalid token'}, status=400)
 
 
 class RoleViewSet(viewsets.ViewSet):

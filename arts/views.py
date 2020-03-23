@@ -1,11 +1,12 @@
+from rest_framework.permissions import AllowAny
 from accounts.models import Profile
 from accounts.serializers import ProfileSerializer
 from .serializers import *
 from django.conf import settings
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from payments.stripe_gateway import Stripe
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes, api_view
 from .forms import ProductPaymentForm, OrderForm
 from accounts.mailers import send_buy_link
 from rest_framework.exceptions import ValidationError
@@ -13,18 +14,11 @@ from rest_framework.pagination import LimitOffsetPagination, PageNumberPaginatio
 from rest_framework import filters
 
 
-class ProductViewSet(viewsets.ModelViewSet):
-    serializer_class = ProductSerializer
-    pagination_class = LimitOffsetPagination
-    pagination_class.default_limit = 10
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'slug', 'description']
+class BillsViewSet(viewsets.ModelViewSet):
+    permission_classes = (AllowAny,)
+    http_method_names = ['post', 'get']
 
-    def get_queryset(self):
-        return Product.objects.filter(user=self.request.user)
-
-    @action(detail=False, methods=['get'])
-    def get_bill_info(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         product_id = request.query_params.get('product_id')
         user_id = request.query_params.get('user_id')
 
@@ -41,6 +35,17 @@ class ProductViewSet(viewsets.ModelViewSet):
         data = {'product': product_serializer.data, 'profile': profile_serializer.data}
 
         return Response({'status': 'success', 'data': data})
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductSerializer
+    pagination_class = LimitOffsetPagination
+    pagination_class.default_limit = 10
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'slug', 'description']
+
+    def get_queryset(self):
+        return Product.objects.filter(user=self.request.user)
 
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True

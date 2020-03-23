@@ -13,11 +13,11 @@ from sendgrid.helpers.mail import Mail
 
 
 def activation_text(token):
-    return f'{settings.DOMAIN}/api/accounts/activate/{token}'
+    return f'{settings.DOMAIN}/auth/email-activate?token={token}'
 
 
 def activation_html(token):
-    return f'<h5><a href="https://{settings.DOMAIN}/api/accounts/activate/{token}">Click here to activate account</a></h5>'
+    return f'<h5><a href="{settings.DOMAIN}/auth/email-activate?token={token}">Click here to activate account</a></h5>'
 
 
 def reset_text(token):
@@ -25,7 +25,7 @@ def reset_text(token):
 
 
 def reset_html(token):
-    return f'<h5><a href="https://{settings.DOMAIN}/reset-password/{token}">Click here to reset your password</a></h5>'
+    return f'<h5><a href="{settings.DOMAIN}/reset-password/{token}">Click here to reset your password</a></h5>'
 
 
 def send_email(to, subject, token, activation=True):
@@ -75,7 +75,7 @@ def send_email(to, subject, token, activation=True):
 
 
 def send_registration_notification(to):
-    html_content = f'You\'ve been registered into <a href="https://{settings.DOMAIN}">Arttwork.com</a> by buying a product from a artist.<br>Click <a href="https://{settings.DOMAIN}/auth/login">here</a> to login into our system'
+    html_content = f'You\'ve been registered into <a href="{settings.DOMAIN}">Arttwork.com</a> by buying a product from a artist.<br>Click <a href="{settings.DOMAIN}/auth/login">here</a> to login into our system'
     message = Mail(
         from_email=EMAIL_FROM,
         to_emails=to,

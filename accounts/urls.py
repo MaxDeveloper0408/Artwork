@@ -7,6 +7,7 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'signup', views.Signup, base_name='signup'),
 router.register(r'login', views.Login, base_name='login'),
+router.register(r'activate', views.Activate, base_name='activate'),
 router.register(r'forgot-password', views.ForgotPassword, base_name='forgot_password'),
 router.register(r'profile', views.ProfileViewSet, base_name='profile'),
 router.register(r'reset-password', views.ResetPassword, base_name='reset_password'),

@@ -175,10 +175,10 @@ else:
 
 if DEBUG is True:
     # if development mode, DOMAIN should be localhost:4200
-    DOMAIN = "localhost:4200"
+    DOMAIN = "http://localhost:4200"
 else:
     # if production mode, DOMAIN should be arttwork.com
-    DOMAIN = ALLOWED_HOSTS[0]
+    DOMAIN = "https://" + ALLOWED_HOSTS[0]
 
 PAGE_LIMIT = 10
 PAGE_OFFSET = 1
