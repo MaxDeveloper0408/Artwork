@@ -165,7 +165,7 @@ if DEBUG is True:
     # if development mode, DOMAIN should be localhost:4200
     STRIPE_SECRET_KEY = 'sk_test_VmrihYzMQmS7XmDU5fYFcCej00uknEsOVg'
     STRIPE_PUBLISHABLE_KEY = 'pk_test_HT6HE4tJf7H35fM7UgxPU27e00kLYmwnkL'
-    STRIPE_CLIENT_ID = 'ca_Gi4xztYTm0ezwLSvAf8xJxVXhLB4zqWG'
+    STRIPE_CLIENT_ID = 'ca_Gy5W5loNkI2u8JKlsgVk4RXyPeh3gt4N'
 else:
     # if production mode, DOMAIN should be arttwork.com
     STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
