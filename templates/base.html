@@ -57,12 +57,10 @@ License: You must have a valid license purchased only from https://themeforest.n
 <link rel="stylesheet" href="{% static 'styles.css' %}"></head>
 
 <body kt-root><script src="{% static 'runtime.js' %}"></script><script src="{% static 'polyfills-es5' %}.js" nomodule></script><script src="{% static 'polyfills.js' %}"></script><script src="{% static 'main.js' %}"></script></body>
+<script src="https://unpkg.com/card@2.3.0/dist/card.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"
   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="{% static 'assets/js/global/integration/plugins/flickity.pkgd.min.js' %}"></script>
 <script src="https://js.stripe.com/v3/"></script>
-<script type="text/javascript">
-	var stripe = Stripe('pk_live_XsOi0Z9NNJeNgoVeZSSYnuCP00rch8YqF9'); // use your test publishable key
-	var elements = stripe.elements();
-  </script>
+
 </html>

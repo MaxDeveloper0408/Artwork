@@ -411,6 +411,14 @@ ul {
   }
 }
 
+// customize ngx-toastr
+.toast-container .ngx-toastr {
+  width: 450px;
+  @media (max-width: 425px) {
+    width: 100%;
+  }
+}
+
 // I wonder if this is correct but no way
 @media (max-width: 1024px) {
   .mat-select-trigger {
