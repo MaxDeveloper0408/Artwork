@@ -87,4 +87,4 @@ class CreditCard(BaseModel):
     number = models.CharField(max_length=19)
     exp_month = models.CharField(max_length=2)
     exp_year = models.CharField(max_length=4)
-    cvv = models.CharField(max_length=3)
+    cvc = models.CharField(max_length=3)

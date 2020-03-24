@@ -44,6 +44,23 @@ class Stripe:
             self.status = False
             return {"status": False, "response": {"error": "Code not passed"}}
 
+    def make_payment_intent(self):
+        amount = self.kwargs.get('price')
+        currency = self.kwargs.get('currency')
+        payment_method = self.kwargs.get('payment_method')
+        intent = self.stripe.PaymentIntent.create(
+            amount=amount,
+            currency=currency,
+            payment_method=payment_method,
+            # Verify your integration in this guide by including this parameter
+            metadata={'integration_check': 'accept_a_payment'},
+        )
+        return intent
+
+    def make_payment_method(self, card, billing_details):
+        payment_method = self.stripe.PaymentMethod.create(type="card", billing_details=billing_details, card=card)
+        return payment_method
+
     def charge(self):
 
         total_amount = self.kwargs.get('total_amount', False)

@@ -5,4 +5,4 @@ class APIResponse:
 
     @staticmethod
     def success(data):
-        return {'status': 'error', 'data': data}
+        return {'status': 'success', 'data': data}

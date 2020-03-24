@@ -35,9 +35,15 @@ class ConnectStripe(APIView):
         return Response({"status": response['status']})
 
 
-class Checkout(APIView):
+class SavePayment(APIView):
+    def post(self, request):
+        return Response(APIResponse.success('Saved payment result'))
+
+
+class PaymentIntent(APIView):
     def post(self, request, *args, **kwargs):
         payment_info = request.data
+        print(payment_info);
         product_slug = payment_info.get('product')
         try:
             product = Product.objects.get(slug=product_slug)
@@ -45,52 +51,52 @@ class Checkout(APIView):
             return Response(APIResponse.error(message='The product does not exist', code=-3001), status=404)
 
         email = payment_info.get('email')
+        signup_data = {
+            'username': payment_info.get('name').lower(),
+            'password1': 'initial password',
+            'password2': 'initial password',
+            'email': email,
+        }
+        address_data = {
+            'city': payment_info.get('city'),
+            # 'zip_code': payment_info.get('postCode'),
+            'zip_code': ' ',
+            'state': payment_info.get('state'),
+            'country': payment_info.get('country'),
+            'address_line1': payment_info.get('addressLine1'),
+            'address_line2': payment_info.get('addressLine2'),
+        }
+
+        activation_secret = auth.makesecret(payment_info.get('name').lower())
+        profile_data = {
+            'role': 4,
+            'phone': payment_info.get('phone'),
+            'dob': payment_info.get('dob'),
+            'activation_secret': activation_secret,
+        }
+        credit_card_data = {
+            'number': payment_info.get('creditCardNumber'),
+            'exp_month': payment_info.get('exp_month'),
+            'exp_year': payment_info.get('exp_year'),
+            'cvc': payment_info.get('cvc'),
+        }
+        order_data = {
+            'currency': payment_info.get('currency'),
+            'price': payment_info.get('price'),
+            'by': payment_info.get('by')
+        }
+
+        order_form = OrderForm(order_data)
+
         try:
             collector = User.objects.get(email=email)
         except User.DoesNotExist:
             # create a collector account
-            signup_data = {
-                'username': payment_info.get('name').lower(),
-                'password1': 'initial password',
-                'password2': 'initial password',
-                'email': email,
-            }
-            address_data = {
-                'city': payment_info.get('city'),
-                # 'zip_code': payment_info.get('postCode'),
-                'zip_code': ' ',
-                'state': payment_info.get('state'),
-                'country': payment_info.get('country'),
-                'address_line1': payment_info.get('addressLine1'),
-                'address_line2': payment_info.get('addressLine2'),
-            }
-
-            credit_card_data = {
-                'number': payment_info.get('creditCardNumber'),
-                'exp_month': payment_info.get('exp_month'),
-                'exp_year': payment_info.get('exp_year'),
-                'cvv': payment_info.get('cvv'),
-            }
-
-            activation_secret = auth.makesecret(payment_info.get('name').lower())
-            profile_data = {
-                'role': 4,
-                'phone': payment_info.get('phone'),
-                'dob': payment_info.get('dob'),
-                'activation_secret': activation_secret,
-            }
-
-            order_data = {
-                'currency': payment_info.get('currency'),
-                'price': payment_info.get('price'),
-                'by': payment_info.get('by')
-            }
 
             signup_form = SignupForm(signup_data)
             address_form = AddressForm(data=address_data)
             credit_card_form = CreditCardForm(data=credit_card_data)
             profile_form = ProfileForm(data=profile_data)
-            order_form = OrderForm(order_data)
 
             if not signup_form.is_valid():
                 print(signup_form.errors.get_json_data())
@@ -151,7 +157,26 @@ class Checkout(APIView):
         order.save()
         order.tags.set(tag_list)
 
-        return Response({'status': 'success', 'data': 'Charge Now invoked'})
+        stripe = Stripe()
+        billing_detail = {'address': {
+            'city': payment_info.get('city'),
+            'country': payment_info.get('country'),
+            'line1': payment_info.get('addressLine1'),
+            'line2': payment_info.get('addressLine2'),
+            'postal_code': '',
+            'state': payment_info.get('state'),
+        }}
+        method = stripe.make_payment_method(credit_card_data, billing_detail)
+
+        stripe.kwargs["price"] = payment_info['price']
+        stripe.kwargs["currency"] = payment_info['currency']
+        stripe.kwargs["payment_method"] = method.id
+        intent = stripe.make_payment_intent()
+
+        return Response(APIResponse.success({
+            'paymentIntent': intent,
+            'paymentMethod': method
+        }))
 
 
 class CheckoutViaLink(APIView):

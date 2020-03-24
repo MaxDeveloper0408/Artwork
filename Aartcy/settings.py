@@ -163,8 +163,8 @@ EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
 # Stripe Settings
 if DEBUG is True:
     # if development mode, DOMAIN should be localhost:4200
-    STRIPE_SECRET_KEY = 'sk_test_KfQX0Btn8s2SbArccTLvnii800wOrhcuxa'
-    STRIPE_PUBLISHABLE_KEY = 'pk_test_D7tZZuyq3MOf2Yegj1gzwywC00NLg9Si4T'
+    STRIPE_SECRET_KEY = 'sk_test_VmrihYzMQmS7XmDU5fYFcCej00uknEsOVg'
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_HT6HE4tJf7H35fM7UgxPU27e00kLYmwnkL'
     STRIPE_CLIENT_ID = 'ca_Gi4xztYTm0ezwLSvAf8xJxVXhLB4zqWG'
 else:
     # if production mode, DOMAIN should be arttwork.com

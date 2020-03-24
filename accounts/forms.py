@@ -34,7 +34,7 @@ class AddressForm(ModelForm):
 class CreditCardForm(ModelForm):
     class Meta:
         model = CreditCard
-        fields = ['number', 'exp_month', 'exp_year', 'cvv']
+        fields = ['number', 'exp_month', 'exp_year', 'cvc']
 
 
 class ProfileForm(ModelForm):
