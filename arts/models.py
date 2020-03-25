@@ -73,8 +73,8 @@ class Order(BaseModel):
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     currency = models.CharField(max_length=3, choices=currency_options, default='usd')
-    price = models.IntegerField()
-    fees = models.IntegerField(default=0, blank=True)
+    price = models.FloatField(default=0)
+    fees = models.FloatField(default=0, blank=True)
     collector = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Collector')
     tags = models.ManyToManyField(Tag, blank=True)
     by = models.CharField(max_length=1, choices=by_options, default='O')
