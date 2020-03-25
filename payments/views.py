@@ -1,4 +1,5 @@
 import json
+import stripe
 from .stripe_gateway import Stripe
 from django.http import JsonResponse
 from rest_framework.views import APIView
@@ -157,7 +158,7 @@ class PaymentIntent(APIView):
         order.save()
         order.tags.set(tag_list)
 
-        stripe = Stripe()
+        stripe_manager = Stripe()
         billing_detail = {'address': {
             'city': payment_info.get('city'),
             'country': payment_info.get('country'),
@@ -166,12 +167,16 @@ class PaymentIntent(APIView):
             'postal_code': '',
             'state': payment_info.get('state'),
         }}
-        method = stripe.make_payment_method(credit_card_data, billing_detail)
-
-        stripe.kwargs["price"] = payment_info['price']
-        stripe.kwargs["currency"] = payment_info['currency']
-        stripe.kwargs["payment_method"] = method.id
-        intent = stripe.make_payment_intent()
+        try:
+            method = stripe_manager.make_payment_method(credit_card_data, billing_detail)
+            stripe_manager.kwargs["price"] = payment_info['price']
+            stripe_manager.kwargs["currency"] = payment_info['currency']
+            stripe_manager.kwargs["payment_method"] = method.id
+            intent = stripe_manager.make_payment_intent()
+        except stripe.error.StripeError as e:
+            print('Stripe error', e.error.message)
+            return Response(APIResponse.error(message=e.error.message, code=-3008),
+                            status=400)
 
         return Response(APIResponse.success({
             'paymentIntent': intent,
@@ -216,7 +221,6 @@ class CheckoutViaLink(APIView):
 
         try:
             if not payment.status == 'C':
-
                 if status == True:
                     payment.status = 'C'
                     payment.save()

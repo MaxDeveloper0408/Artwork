@@ -342,7 +342,6 @@ class UserViewSet(viewsets.ModelViewSet):
         queryset = Profile.objects.all().exclude(user=self.request.user)
         role = self.request.query_params.get('role', None)
         if role is not None:
-            print('Collector requiring')
             queryset = queryset.filter(role=role)
         return queryset
 
