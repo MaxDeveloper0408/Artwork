@@ -180,7 +180,7 @@ class PaymentIntent(APIView):
         }}
         try:
             method = stripe_manager.make_payment_method(credit_card_data, billing_detail)
-            stripe_manager.kwargs["price"] = payment_info['price'] * 100
+            stripe_manager.kwargs["price"] = int(payment_info['price'] * 100)
             stripe_manager.kwargs["currency"] = payment_info['currency']
             stripe_manager.kwargs["application_fee"] = payment_info['price'] * artist.profile.platform_fees
             stripe_manager.kwargs["payment_method"] = method.id
