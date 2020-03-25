@@ -20,7 +20,7 @@ class AddressSerializer(ModelSerializer):
 class CreditCardSerializer(ModelSerializer):
     class Meta:
         model = CreditCard
-        fields = '__ALL__'
+        fields = '__all__'
 
 
 class CountrySerializer(ModelSerializer):
@@ -35,8 +35,8 @@ class ProfileSerializer(ModelSerializer):
     first_name = SerializerMethodField('get_first_name')
     last_name = SerializerMethodField('get_last_name')
     platform_fees = SerializerMethodField('get_platform_fees')
-    primary_address = AddressSerializer(read_only=True)
     dob = serializers.DateField(format="%m/%d/%Y")
+    primary_address = AddressSerializer(read_only=True)
     credit_card = CreditCardSerializer(read_only=True)
 
     class Meta:
