@@ -377,19 +377,16 @@ class ProfileViewSet(viewsets.ViewSet):
         p_serializer = ProfileSerializer(p_instance, data=mutable_data, partial=True)
         p_serializer.is_valid(raise_exception=True)
 
-        address = Address.objects.filter(user=request.user)
+        address = Address.objects.filter(user=request.user).first()
 
         if address:
             try:
-                if address.user.id == request.user.id:
-                    a_serializer = AddressSerializer(address, data=mutable_data, partial=True)
-                    a_serializer.is_valid(raise_exception=True)
+                a_serializer = AddressSerializer(address, data=mutable_data, partial=True)
+                a_serializer.is_valid(raise_exception=True)
 
-                    u_serializer.save()
-                    a_serializer.save()
-                    p_serializer.save(primary_address=address)
-                else:
-                    raise ValidationError(detail={"status": "error", "message": "Address does not belong to you."})
+                u_serializer.save()
+                a_serializer.save()
+                p_serializer.save(primary_address=address)
             except Address.DoesNotExist as e:
                 raise ValidationError(detail={"status": "error", "message": "Address matching does not exist."})
         else:
