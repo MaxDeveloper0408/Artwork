@@ -99,7 +99,7 @@ def send_registration_notification(to):
 
 def send_buy_link(to, subject, link):
     text = f'{link}'
-    html = f'<a href="{link}">Buy</a>'
+    html = f'<h5><a href="{settings.DOMAIN}{link}">Buy</a><h5>'
 
     message = Mail(
         from_email=EMAIL_FROM,
