@@ -44,7 +44,7 @@ class SavePayment(APIView):
 class PaymentIntent(APIView):
     def post(self, request, *args, **kwargs):
         payment_info = request.data
-        print(payment_info);
+        print(payment_info)
         product_slug = payment_info.get('product')
         try:
             product = Product.objects.get(slug=product_slug)
