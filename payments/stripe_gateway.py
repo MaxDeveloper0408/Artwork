@@ -48,10 +48,14 @@ class Stripe:
         amount = self.kwargs.get('price')
         currency = self.kwargs.get('currency')
         payment_method = self.kwargs.get('payment_method')
+        application_fee_amount = self.kwargs.get('application_fee')
         intent = self.stripe.PaymentIntent.create(
             amount=amount,
             currency=currency,
             payment_method=payment_method,
+            application_fee_amount=application_fee_amount,
+            on_behalf_of=self.account_id,
+            transfer_data={"destination": self.account_id},
             # Verify your integration in this guide by including this parameter
             metadata={'integration_check': 'accept_a_payment'},
         )

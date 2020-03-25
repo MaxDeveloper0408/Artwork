@@ -48,6 +48,17 @@ class PaymentIntent(APIView):
         product_slug = payment_info.get('product')
         try:
             product = Product.objects.get(slug=product_slug)
+            artist = product.user
+            artist_payment_method = artist.paymentmethod_set.first()
+            if not artist_payment_method:
+                return Response(APIResponse.error(
+                    message='Your stripe account is not connected. Please connect your account and try again',
+                    code=-3000), status=401)
+
+            artist_stripe_id = artist_payment_method.stripe_id
+            if not artist_stripe_id:
+                return Response(APIResponse.error(message='Your stripe account is not valid', code=-3000), status=401)
+
         except Product.DoesNotExist:
             return Response(APIResponse.error(message='The product does not exist', code=-3001), status=404)
 
@@ -158,7 +169,7 @@ class PaymentIntent(APIView):
         order.save()
         order.tags.set(tag_list)
 
-        stripe_manager = Stripe()
+        stripe_manager = Stripe(artist_stripe_id)
         billing_detail = {'address': {
             'city': payment_info.get('city'),
             'country': payment_info.get('country'),
@@ -169,8 +180,9 @@ class PaymentIntent(APIView):
         }}
         try:
             method = stripe_manager.make_payment_method(credit_card_data, billing_detail)
-            stripe_manager.kwargs["price"] = payment_info['price']
+            stripe_manager.kwargs["price"] = payment_info['price'] * 100
             stripe_manager.kwargs["currency"] = payment_info['currency']
+            stripe_manager.kwargs["application_fee"] = payment_info['price'] * artist.profile.platform_fees
             stripe_manager.kwargs["payment_method"] = method.id
             intent = stripe_manager.make_payment_intent()
         except stripe.error.StripeError as e:
