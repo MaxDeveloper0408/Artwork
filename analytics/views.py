@@ -1,11 +1,11 @@
 from .models import *
+from .models import *
 from Aartcy.utils.api_response import APIResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from accounts.serializers import ProfileSerializer
 from rest_framework import viewsets
-
-from django.db.models import Count, Sum, Avg
+from accounts.serializers import ProfileSerializer
+from django.db.models import Count, Sum, Avg, Max
 from .serializers import GoalSerializer, TopBuyersSerializers, \
     CertificateOfAuthenticitySerializer, PayoutSerializer, TransactionSerializer, \
     TopTagsSerializer, TopArtistSales, TopCollectors
@@ -90,13 +90,11 @@ class LatestOrders(ViewSet):
 
 class LatestCollectors(viewsets.ViewSet):
     def list(self, request):
-        orders = Order.objects.all().filter(product__user=request.user).distinct().order_by('-created_at')
-        users = orders.values_list('collector_id', flat=True)
-        print('collectors in Order model', users)
-        collectors = Profile.objects.filter(user__id__in=users)
-        print('collectors bound in Profile model', collectors)
-        serializer = ProfileSerializer(collectors, many=True)
-        return Response(APIResponse(serializer.data), status=200)
+        orders = Order.objects.all().filter(product__user=request.user).values('collector').annotate(Max('created_at')).order_by('-created_at__max')
+        users = orders.values_list('collector', flat=True)
+        collectors = Profile.objects.filter(user__in=users)
+        serializer = ProfileSerializer(collectors[:5], many=True) # Latest 5 collectors returned
+        return Response(APIResponse.success(serializer.data), status=200)
 
 
 class TopBuyers(ViewSet):
