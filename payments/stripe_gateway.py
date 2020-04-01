@@ -86,3 +86,12 @@ class Stripe:
         }
 
         return self.stripe.PaymentIntent.create(**charge_data)
+
+    def balance(self):
+        assert self.account_id, "Please provide user's stripe account id."
+
+        balance = self.stripe.Balance.retrieve(
+            stripe_account=self.account_id
+        )
+
+        return balance

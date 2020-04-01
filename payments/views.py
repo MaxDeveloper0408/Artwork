@@ -19,6 +19,26 @@ def oauth_link(request):
     return JsonResponse({'link': Stripe().oauth_link()})
 
 
+class CurrentBalance(APIView):
+
+    def get(self, request, *args, **kwargs):
+        stripe = Stripe()
+        payment_method = PaymentMethod.objects.filter(user=request.user).first()
+
+        if payment_method and payment_method.is_active():
+            stripe_user_id = payment_method.stripe_id
+        else:
+            return Response({"error": "Stripe account not connected."}, status=400)
+
+        stripe.account_id = stripe_user_id
+        balance = stripe.balance()
+
+        if not balance:
+            return Response({"error": "Could not get balance of account."}, status=400)
+
+        return Response({'status': 'success', 'balance': balance.available[0]})
+
+
 class ConnectStripe(APIView):
 
     def post(self, request, *args, **kwargs):

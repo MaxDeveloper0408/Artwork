@@ -8,6 +8,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     # path('',include(router.urls)),
     path('oauth-link/', views.oauth_link, name='ouath_link'),
+    path('current-balance/', views.CurrentBalance.as_view(), name='current_balance'),
     path('connect-stripe/', views.ConnectStripe.as_view(), name='connect_stripe'),
     path('save_payment/', views.SavePayment.as_view(), name='checkout'),
     path('payment_intent/', views.PaymentIntent.as_view(), name='payment_intent'),
