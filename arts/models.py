@@ -47,7 +47,7 @@ class Product(BaseModel):
     currency = models.CharField(max_length=3, choices=currency_choices, default='usd')
     price = models.FloatField(default=0)
     description = models.TextField(default='', blank=True, null=True)
-    image = models.ImageField(upload_to='products', blank=True, null=True)
+    image = models.ImageField(upload_to='products', default='profiles/avatar.png')
     status = models.CharField(max_length=1, choices=status_choices, default='A')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Artist')
 
