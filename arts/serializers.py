@@ -25,6 +25,7 @@ class TagSerializer(ModelSerializer):
 
 
 class ProductSerializer(ModelSerializer):
+    sales = SerializerMethodField()  # equal to ('get_sales')
 
     # adding authenticated user to user field
     def to_internal_value(self, data):
@@ -35,3 +36,7 @@ class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+        # extra_fields = ['sales']
+
+    def get_sales(self, obj):  # use the serializer to calculate the age and pass it as a serializer field.
+        return len(Order.objects.filter(product=obj))
