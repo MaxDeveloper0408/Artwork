@@ -3,7 +3,7 @@ from .models import *
 from Aartcy.utils.api_response import APIResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from accounts.serializers import ProfileSerializer
 from django.db.models import Count, Sum, Avg, Max
 from .serializers import GoalSerializer, TopBuyersSerializers, \
@@ -171,19 +171,63 @@ class Transactions(ModelViewSet):
         return ProductPayment.objects.filter(order__product__user=self.request.user)
 
 
-class Charges(ViewSet):
+class Charges(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    pagination_class = LimitOffsetPagination
+    pagination_class.default_limit = 10
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['product__name']
+    ordering_fields = ['time', 'price', 'fees', 'net']
 
-    def list(self, request):
-        data = {}
+    def get_queryset(self):
+        status = self.request.query_params.get('status')
+        orders = Order.objects.filter(product__user=self.request.user)
+
+        if status == 'all':
+            orders = orders.all()
+        elif status == 'pending':
+            orders = orders.pending()
+        elif status == 'incomplete':
+            orders = orders.incomplete()
+        elif status == 'refund':
+            orders = orders.refund()
+
+        return orders
+
+    # def list(self, request):
+    #     data = {}
+    #     orders = Order.objects.filter(product__user=request.user)
+    #     data['total_charges'] = orders.count()
+    #     data['successful_charges'] = orders.complete().count()
+    #     data['failed_charges'] = orders.failed().count()
+    #     data['gross_sale'] = orders.complete().values_list('price').aggregate(g=Sum('price'))['g']
+    #     data['processing_fees'] = transaction_fees(orders.complete(), flat=True)
+    #     data['net_sales'] = transferred_amount(orders.complete(), flat=True)
+    #
+    #     return Response(data)
+
+
+    @action(methods=['get'], detail=False)
+    def order_by_status(self, request, *args, **kwargs):
+        status = request.query_params.get('status')
         orders = Order.objects.filter(product__user=request.user)
-        data['total_charges'] = orders.count()
-        data['successful_charges'] = orders.complete().count()
-        data['failed_charges'] = orders.failed().count()
-        data['gross_sale'] = orders.complete().values_list('price').aggregate(g=Sum('price'))['g']
-        data['processing_fees'] = transaction_fees(orders.complete(), flat=True)
-        data['net_sales'] = transferred_amount(orders.complete(), flat=True)
 
-        return Response(data)
+        if status == 'all':
+            orders = orders.all()
+        elif status == 'pending':
+            orders = orders.pending()
+        elif status == 'incomplete':
+            orders = orders.incomplete()
+        elif status == 'refund':
+            orders = orders.refund()
+
+        paginated_data = Pager(self.request, orders, query_params=self.request.query_params).offset_pagination()
+        orders = paginated_data['results']
+        serialized_data = OrderSerializer(orders, many=True).data
+        paginated_data['results'] = serialized_data
+
+        print(paginated_data)
+        return Response(paginated_data)
 
 
 class AdminDashboard(ViewSet):

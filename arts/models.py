@@ -75,10 +75,14 @@ class Order(BaseModel):
     currency = models.CharField(max_length=3, choices=currency_options, default='usd')
     price = models.FloatField(default=0)
     fees = models.FloatField(default=0, blank=True)
+    net = models.FloatField(default=0, blank=True)
     collector = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Collector')
     tags = models.ManyToManyField(Tag, blank=True)
     by = models.CharField(max_length=1, choices=by_options, default='O')
     status = models.CharField(max_length=1, choices=order_status, default='I', blank=True)
+    time = models.DateTimeField(auto_now=True)
+
+    objects = OrderQuerySet.as_manager()
 
     def __str__(self):
         return self.product.name
