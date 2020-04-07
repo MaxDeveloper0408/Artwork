@@ -43,7 +43,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     pagination_class.default_limit = 10
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'slug', 'description']
-    ordering_fields = ['description', 'created_at', 'price', 'status']
+    ordering_fields = ['name', 'description', 'created_at', 'price', 'status']
 
     def get_queryset(self):
         return Product.objects.filter(user=self.request.user)
@@ -162,5 +162,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
-
+    pagination_class = LimitOffsetPagination
+    pagination_class.default_limit = 10
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    ordering_fields = ['name', 'slug']

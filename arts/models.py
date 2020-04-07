@@ -14,7 +14,7 @@ class BaseModel(models.Model):
 class Category(BaseModel):
     name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='categories', blank=True, null=True)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -39,7 +39,8 @@ class Tag(BaseModel):
 
 
 class Product(BaseModel):
-    status_choices = (('I', 'Inactive'), ('A', 'Active'))
+    type_choices = ((0, 'Digital'), (1, 'Physical'))
+    status_choices = (('L', 'Live'), ('T', 'Test'), ('D', 'Disabled'))
     currency_choices = (('usd', 'USD'), ('eur', 'EUR'))
 
     name = models.CharField(max_length=200)
@@ -47,9 +48,17 @@ class Product(BaseModel):
     currency = models.CharField(max_length=3, choices=currency_choices, default='usd')
     price = models.FloatField(default=0)
     description = models.TextField(default='', blank=True, null=True)
+    type = models.SmallIntegerField(choices=type_choices, default=1)
     image = models.ImageField(upload_to='products', default='profiles/avatar.png')
-    status = models.CharField(max_length=1, choices=status_choices, default='A')
+    attach = models.FileField(upload_to='uploads/', null=True, blank=True)
+    status = models.CharField(max_length=1, choices=status_choices, default='L')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Artist')
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    length = models.FloatField(default=0)
+    width = models.FloatField(default=0)
+    height = models.FloatField(default=0)
+    weight = models.FloatField(default=0)
+    notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
