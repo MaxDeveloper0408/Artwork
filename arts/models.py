@@ -50,7 +50,7 @@ class Product(BaseModel):
     description = models.TextField(default='', blank=True, null=True)
     type = models.SmallIntegerField(choices=type_choices, default=1)
     image = models.ImageField(upload_to='products', default='profiles/avatar.png')
-    attach = models.FileField(upload_to='uploads/', null=True, blank=True)
+    attachment = models.FileField(upload_to='uploads/', null=True, blank=True)
     status = models.CharField(max_length=1, choices=status_choices, default='L')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Artist')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
@@ -59,6 +59,7 @@ class Product(BaseModel):
     height = models.FloatField(default=0)
     weight = models.FloatField(default=0)
     notes = models.TextField(blank=True, null=True)
+    link = models.URLField()
 
     def __str__(self):
         return self.name
