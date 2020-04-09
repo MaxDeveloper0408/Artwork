@@ -368,7 +368,6 @@ class ProfileViewSet(viewsets.ViewSet):
     def update_profile(self, request, *args, **kwargs):
         mutable_data = request.data
         # primary_address = request.data.get('primary_address')
-        print(mutable_data)
 
         u_serializer = UserSerializer(request.user, data=mutable_data, partial=True)
         u_serializer.is_valid(raise_exception=True)
@@ -399,7 +398,16 @@ class ProfileViewSet(viewsets.ViewSet):
             a_serializer.save()
             p_serializer.save(primary_address=address)
 
-        return Response({'status': 'success', 'data': p_serializer.data})
+        user_data = p_serializer.data
+
+        # payment method data
+        payment_method = PaymentMethod.objects.filter(user=request.user)
+        if payment_method:
+            payment_method_serializer = PaymentMethodSerializer(payment_method)
+            user_data.update({'payment_method': payment_method_serializer.data})
+
+        result = {'status': 'success', 'data': user_data}
+        return Response(result)
 
     @action(['PUT'], False)
     def change_password(self, request, *args, **kwargs):
