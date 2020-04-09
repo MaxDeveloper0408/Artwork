@@ -3,7 +3,7 @@ from accounts.models import Profile
 from accounts.serializers import ProfileSerializer
 from .serializers import *
 from django.conf import settings
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, status
 from payments.stripe_gateway import Stripe
 from rest_framework.response import Response
 from rest_framework.decorators import action, permission_classes, api_view
@@ -12,6 +12,8 @@ from accounts.mailers import send_buy_link
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 from rest_framework import filters
+from django.http import Http404
+from Aartcy.utils.api_response import APIResponse
 
 
 class BillsViewSet(viewsets.ModelViewSet):
@@ -46,12 +48,16 @@ class ProductViewSet(viewsets.ModelViewSet):
     ordering_fields = ['name', 'description', 'created_at', 'price', 'status']
 
     def get_queryset(self):
-        return Product.objects.filter(user=self.request.user)
+        return Product.objects.filter(user=self.request.user, deleted=0)
 
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         self.kwargs['method'] = 'partial'
         return self.update(request, *args, **kwargs)
+
+    def perform_destroy(self, instance):
+        instance.deleted = 1
+        instance.save()
 
     # @permission_classes([permissions.AllowAny])
     @action(detail=True, methods=['post'])

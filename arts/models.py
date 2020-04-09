@@ -60,6 +60,7 @@ class Product(BaseModel):
     weight = models.FloatField(default=0)
     notes = models.TextField(blank=True, null=True)
     link = models.URLField()
+    deleted = models.SmallIntegerField(default=0)
 
     def __str__(self):
         return self.name
