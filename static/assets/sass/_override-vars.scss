@@ -22,6 +22,7 @@ $arttwork-green-family-hover-color: #1DD484;
 $arttwork-green-family-active-color: #0FA362;
 
 $arttwork-border-color: $arttwork-secondary-color;
+$arttwork-border-secondary-color: #e9ecf9;
 $arttwork-border-radius: 6px;
 
 $arttwork-facebook-color: #4267B2;
@@ -29,9 +30,9 @@ $arttwork-twitter-color: #1DA1F2;
 $arttwork-google-color: #DB4437;
 
 /* normalize */
-* {
-  font-weight: 500; // should specially define the font-weight value for the header elements
-  line-height: 1.2;
+body {
+  font-weight: 500 !important; // should specially define the font-weight value for the header elements
+  line-height: 1.2 !important;
 }
 
 h1 {
@@ -45,13 +46,15 @@ h6 {
 }
 
 input {
-  color: $arttwork-secondary-color !important;
-  font-size: 18px !important;
+  font-family: 'AvenirNextLTPro';
+  color: $arttwork-primary-color !important;
+  font-size: 1.125rem !important;
 }
 
 ::placeholder {
+  font-family: 'AvenirNextLTPro';
   color: $arttwork-secondary-color !important;
-  font-size: 18px !important;
+  font-size: 1.125rem !important;
 }
 
 /* custom bootstrap */
@@ -65,7 +68,10 @@ input {
 
 .btn-primary, .btn-brand {
   background-color: $arttwork-brand-color;
-  &:focus, &:hover {
+  &:focus {
+    background-color: $arttwork-brand-color;
+  }
+  &:hover {
     background-color: $arttwork-brand-hover-color !important;  
   }
   &:active {
@@ -75,7 +81,10 @@ input {
 
 .btn-secondary {
   background-color: $arttwork-secondary-color;
-  &:hover, &:focus {
+  &:focus {
+    background-color: $arttwork-secondary-color;
+  }
+  &:hover {
     color: #fff;
     background-color: $arttwork-secondary-hover-color !important;
   }
@@ -115,8 +124,9 @@ input {
 /* custom angular material */
 .mat-form-field-label {
   /*change color of label*/
+  font-family: 'AvenirNextLTPro';
   color: $arttwork-secondary-color !important;
-  font-size: 16px !important;
+  font-size: 1rem !important;
 }
 
 .mat-form-field-underline {
@@ -138,7 +148,7 @@ input {
   }
   
   .mat-select-value {
-    color: $arttwork-secondary-color;
+    color: $arttwork-primary-color;
   }
   
   .mat-option-text {
@@ -174,18 +184,18 @@ input {
 
 .artwork-header {
   font-weight: 600;
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 
 .artwork-header-description {
   font-weight: 600;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .artwork-btn {
   height: 54px;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: #fff;
   border: transparent;
 }
@@ -199,6 +209,10 @@ a.artwork-btn {
 .artwork-btn-white-family {
   color: $arttwork-secondary-color !important;
   background-color: $arttwork-white-family-color !important;
+  &:focus {
+    color: $arttwork-secondary-color !important;
+    background-color: $arttwork-white-family-color !important;
+  }
   &:hover {
     color: #fff !important;
     background-color: $arttwork-secondary-color !important;
@@ -206,6 +220,21 @@ a.artwork-btn {
   &:active {
     color: $arttwork-secondary-color !important;
     background-color: #F4F6FC !important;
+  }
+  &:disabled {
+    color: $arttwork-secondary-color !important;
+    background-color: $arttwork-white-family-color !important;
+  }
+}
+
+.artwork-datatable-filter {
+  width: 100%;
+  input {
+    font-size: .875rem !important;
+  }
+  .mat-form-field-label {
+    font-size: .875rem !important;
+    margin: .1rem 0 .1rem;
   }
 }
 
@@ -244,6 +273,44 @@ a.artwork-btn {
   }
 }
 
+.artwork-data-table {
+  font-family: 'AvenirNextLTPro';
+  .mat-header-row, .mat-row {
+    border-bottom-color: $arttwork-white-family-color;
+  }
+  .mat-row {
+    padding: 1rem 0;
+  }
+  .mat-header-cell {
+    font-size: .875rem;
+    color: $arttwork-secondary-color;
+    .mat-sort-header-container button {
+      text-align: left;
+    }
+  }
+  .mat-cell {
+    font-size: .875rem;
+    color: $arttwork-primary-color;
+  }
+  .mat-header-cell, .mat-cell {
+    &:not(:first-child) {
+      padding-left: .5rem;
+    }
+    &:first-child {
+      padding-left: 0;
+    }
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.artwork-paginator {
+  font-family: 'AvenirNextLTPro';
+  font-size: .875rem;
+  color: $arttwork-secondary-color;
+}
+
 .ng-select.artwork {
   min-width: 100px;
   .ng-select-container, .ng-select-focused:not(.ng-select-opened)>.ng-select-container {
@@ -251,7 +318,7 @@ a.artwork-btn {
     border-radius: $arttwork-border-radius;
     border: 1px solid rgba(147, 175, 202, 0.12) !important;
     color: $arttwork-secondary-color;
-    font-size: 14px;
+    font-size: .875rem;
     box-shadow: none;
 
     .ng-value-container {
@@ -271,7 +338,7 @@ a.artwork-btn {
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
     padding: 0.5rem 1rem;
     color: $arttwork-secondary-color;
-    font-size: 14px;
+    font-size: .875rem;
   }
   
   .ng-dropdown-panel.ng-select-bottom {
@@ -322,6 +389,22 @@ a.artwork-btn {
 }
 
 /* custom kt-components */
+.kt-subheader.artwrok-has-submenu {
+  padding: 36px 0 0;
+  .title-wrap {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+}
+
+.artwork-datatable-action {
+  font-size: .875rem;
+  height: auto !important;
+}
+
 .kt-subheader .kt-container.artwork-container {
   width: 100% !important;
   display: block;
@@ -340,6 +423,32 @@ a.artwork-btn {
 }
 
 // inserted by Achilles
+.kt-badge.kt-badge--arttwork {
+  padding: .5rem .375rem;
+  font-size: .875rem;
+  font-weight: 500;
+}
+.kt-badge.kt-badge--green {
+  background-color: rgba($arttwork-green-family-color, 0.1);
+  color: $arttwork-green-family-color;
+}
+.kt-badge.kt-badge--blue {
+  background-color: rgba($arttwork-blue-family-color, 0.1);
+  color: $arttwork-blue-family-color;
+}
+.kt-badge.kt-badge--red {
+  background-color: rgba($arttwork-red-family-color, 0.1);
+  color: $arttwork-red-family-color;
+}
+.kt-badge.kt-badge--secondary {
+  background-color: rgba($arttwork-secondary-color, 0.1);
+  color: $arttwork-secondary-color;
+}
+.kt-badge.kt-badge--info {
+  background-color: rgba(#1F78B4, 0.1);
+  color: $arttwork-info-family-color;
+}
+
 ul {
   list-style: none;
   margin: 0;
@@ -429,4 +538,60 @@ ul {
   .mat-select-trigger {
     height: 1.25em !important;
   }
+}
+
+.artwork-data-table-search {
+  border: 2px solid $arttwork-border-secondary-color;
+  border-radius: $arttwork-border-radius;
+
+  input {
+    flex: 1;
+    outline: none;
+    border: none;
+    padding: .875rem;
+    font-size: .875rem !important;
+    font-weight: 500;
+
+    &::placeholder {
+      font-size: .875rem !important;
+    }
+  }
+  .input-group-text {
+    border: none;
+    background-color: white;
+    i {
+      color: $arttwork-secondary-color;
+      font-size: .875rem;
+    }
+  }
+}
+
+.datatable-container {
+	display: flex;
+	flex-direction: column;
+	overflow-x: auto;
+	position: relative;
+	.mat-table {
+		min-width: 640px;
+		min-height: 300px;
+	}
+
+	.datatable-loading-shade {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 56px;
+		right: 0;
+		background: rgba(0, 0, 0, 0.05);
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.datatable-rate-limit-reached {
+			color: $arttwork-red-family-color;
+			max-width: 360px;
+			text-align: center;
+		}
+	}
 }

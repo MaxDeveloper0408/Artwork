@@ -41,7 +41,49 @@ $kt-subheader-config: (
 		flex-wrap: wrap;
 	}
 
-	// Head actions buttons
+  // Submenu in Subheader
+  ul.subheader-submenu {
+    margin: 0;
+    padding: 0;
+    
+    list-style: none;
+    display: flex;
+
+    li.subheader-submenu-item {
+      a {
+        display: inline-block;
+        text-transform: capitalize;
+        font-size: 1.1rem;
+        color: $arttwork-secondary-color;
+        padding-top: 10px;
+        padding-bottom: 1rem;
+      }
+    }
+    li.subheader-submenu-item + li.subheader-submenu-item {
+      padding-left: 5rem;
+    }
+    li.subheader-submenu-item.active, li.subheader-submenu-item:hover {
+      a {
+        color: $arttwork-primary-color;
+      }
+    }
+    li.subheader-submenu-item.active {
+      a {
+        position: relative;
+
+        &::before {
+          content: " ";
+          position: absolute;
+          width: 100%;
+          bottom: 0;
+          border-bottom: 2px solid $arttwork-primary-color;
+          @include kt-transition();
+        }
+      }
+    }
+  }
+
+  // Head actions buttons
 	.btn {
 		display: inline-flex;
 		height: 32px !important;
@@ -70,48 +112,6 @@ $kt-subheader-config: (
 		align-items: center;
 		flex-wrap: wrap;
 		padding: 2.1rem 0 0 0;
-
-		// Submenu in Subheader
-		ul.subheader-submenu {
-			margin: 0;
-			padding: 0;
-			
-			list-style: none;
-			display: flex;
-
-			li.subheader-submenu-item {
-				a {
-					display: inline-block;
-					text-transform: capitalize;
-					font-size: 1.1rem;
-					color: $arttwork-secondary-color;
-					padding-top: 10px;
-					padding-bottom: 1rem;
-				}
-			}
-			li.subheader-submenu-item + li.subheader-submenu-item {
-				padding-left: 5rem;
-			}
-			li.subheader-submenu-item.active, li.subheader-submenu-item:hover {
-				a {
-					color: $arttwork-primary-color;
-				}
-			}
-			li.subheader-submenu-item.active {
-				a {
-					position: relative;
-
-					&::before {
-						content: " ";
-						position: absolute;
-						width: 100%;
-						bottom: 0;
-						border-bottom: 2px solid $arttwork-primary-color;
-						@include kt-transition();
-					}
-				}
-			}
-		}
 
 		// Buttons
 		.btn {

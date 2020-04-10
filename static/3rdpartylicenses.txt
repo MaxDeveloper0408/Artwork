@@ -101,6 +101,10 @@ THE SOFTWARE.
 
 @angular/material/icon
 
+@angular/material/paginator
+
+@angular/material/progress-bar
+
 @angular/material/progress-spinner
 
 @angular/material/radio
@@ -108,6 +112,10 @@ THE SOFTWARE.
 @angular/material/select
 
 @angular/material/snack-bar
+
+@angular/material/sort
+
+@angular/material/table
 
 @angular/material/tooltip
 
@@ -527,6 +535,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+
+ngx-dropzone
+MIT
 
 ngx-highlightjs
 MIT
