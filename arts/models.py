@@ -78,7 +78,7 @@ class OrderQuerySet(models.QuerySet):
 
 
 class Order(BaseModel):
-    order_status = (('C', 'Complete'), ('I', 'Incomplete'), ('F', 'Failed'), ('R', 'Refund'), ('D', 'Chargebacks'))
+    order_status = (('C', 'Complete'), ('I', 'Incomplete'), ('P', 'Pending'), ('F', 'Failed'), ('R', 'Refund'), ('D', 'Chargebacks'))
     by_options = (('O', 'On Site'), ('L', 'By Email Link'),)
     currency_options = (('usd', 'USD'), ('eur', 'EUR'))
 
@@ -92,6 +92,7 @@ class Order(BaseModel):
     by = models.CharField(max_length=1, choices=by_options, default='O')
     status = models.CharField(max_length=1, choices=order_status, default='I', blank=True)
     time = models.DateTimeField(auto_now=True)
+    payment_intent_id = models.CharField(max_length=32, blank=True)
 
     objects = OrderQuerySet.as_manager()
 

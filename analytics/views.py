@@ -1,3 +1,4 @@
+from payments.stripe_gateway import Stripe
 from .models import *
 from .models import *
 from Aartcy.utils.api_response import APIResponse
@@ -180,8 +181,14 @@ class Charges(viewsets.ModelViewSet):
     ordering_fields = ['time', 'price', 'fees', 'net']
 
     def get_queryset(self):
+        stripe = Stripe()
+
         status = self.request.query_params.get('status')
         orders = Order.objects.filter(product__user=self.request.user)
+
+        for order in orders:
+            order.status = stripe.get_transaction_status(order.payment_intent_id)
+            order.save()
 
         if status == 'all':
             orders = orders.all()

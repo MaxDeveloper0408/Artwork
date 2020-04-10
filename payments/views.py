@@ -205,6 +205,8 @@ class PaymentIntent(APIView):
             stripe_manager.kwargs["application_fee"] = payment_info['price'] * artist.profile.platform_fees
             stripe_manager.kwargs["payment_method"] = method.id
             intent = stripe_manager.make_payment_intent()
+            order.payment_intent_id = intent.id
+            order.save()
         except stripe.error.StripeError as e:
             print('Stripe error', e.error.message)
             return Response(APIResponse.error(message=e.error.message, code=-3008),

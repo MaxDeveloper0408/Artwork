@@ -1,3 +1,5 @@
+import traceback
+
 import stripe
 import requests
 from django.conf import settings
@@ -95,3 +97,19 @@ class Stripe:
         )
 
         return balance
+
+    def get_transaction_status(self, payment_intent_id):
+        try:
+
+            intent = self.stripe.PaymentIntent.retrieve(payment_intent_id)
+            balance_transaction_id = intent.charges.data[0].balance_transaction
+            # print(balance_transaction_id)
+            balance_transaction = self.stripe.BalanceTransaction.retrieve(balance_transaction_id)
+            # print(balance_transaction.status)
+            if balance_transaction.status == 'pending':
+                return 'P'
+            else:
+                return 'I'
+        except:
+            # traceback.print_exc()
+            return 'I'
