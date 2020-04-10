@@ -76,6 +76,12 @@ class OrderQuerySet(models.QuerySet):
     def failed(self):
         return self.filter(status='F')
 
+    def pending(self):
+        return self.filter(status='P')
+
+    def refund(self):
+        return self.filter(status='R')
+
 
 class Order(BaseModel):
     order_status = (('C', 'Complete'), ('I', 'Incomplete'), ('P', 'Pending'), ('F', 'Failed'), ('R', 'Refund'), ('D', 'Chargebacks'))
@@ -91,7 +97,7 @@ class Order(BaseModel):
     tags = models.ManyToManyField(Tag, blank=True)
     by = models.CharField(max_length=1, choices=by_options, default='O')
     status = models.CharField(max_length=1, choices=order_status, default='I', blank=True)
-    time = models.DateTimeField(auto_now=True)
+    time = models.DateTimeField()
     payment_intent_id = models.CharField(max_length=32, blank=True)
 
     objects = OrderQuerySet.as_manager()

@@ -1,4 +1,6 @@
 import json
+from datetime import datetime
+
 import stripe
 from .stripe_gateway import Stripe
 from django.http import JsonResponse
@@ -115,7 +117,8 @@ class PaymentIntent(APIView):
         order_data = {
             'currency': payment_info.get('currency'),
             'price': payment_info.get('price'),
-            'by': payment_info.get('by')
+            'by': payment_info.get('by'),
+            'time': datetime.now()
         }
 
         order_form = OrderForm(order_data)
@@ -186,6 +189,7 @@ class PaymentIntent(APIView):
         order = order_form.save(commit=False)
         order.product = product
         order.collector = collector
+
         order.save()
         order.tags.set(tag_list)
 
@@ -202,10 +206,12 @@ class PaymentIntent(APIView):
             method = stripe_manager.make_payment_method(credit_card_data, billing_detail)
             stripe_manager.kwargs["price"] = int(payment_info['price'] * 100)
             stripe_manager.kwargs["currency"] = payment_info['currency']
-            stripe_manager.kwargs["application_fee"] = payment_info['price'] * artist.profile.platform_fees
+            stripe_manager.kwargs["application_fee"] = payment_info['price'] * artist.profile.platform_fees / 100
             stripe_manager.kwargs["payment_method"] = method.id
             intent = stripe_manager.make_payment_intent()
             order.payment_intent_id = intent.id
+            order.fees = payment_info['price'] * artist.profile.platform_fees
+            order.net = order.price - order.fees
             order.save()
         except stripe.error.StripeError as e:
             print('Stripe error', e.error.message)
