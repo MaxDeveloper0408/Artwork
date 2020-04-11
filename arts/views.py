@@ -172,3 +172,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
     pagination_class.default_limit = 10
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'slug']
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if 'all' in self.request.query_params:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
