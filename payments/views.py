@@ -206,11 +206,11 @@ class PaymentIntent(APIView):
             method = stripe_manager.make_payment_method(credit_card_data, billing_detail)
             stripe_manager.kwargs["price"] = int(payment_info['price'] * 100)
             stripe_manager.kwargs["currency"] = payment_info['currency']
-            stripe_manager.kwargs["application_fee"] = payment_info['price'] * artist.profile.platform_fees / 100
+            stripe_manager.kwargs["application_fee"] = int(payment_info['price'] * artist.profile.platform_fees)
             stripe_manager.kwargs["payment_method"] = method.id
             intent = stripe_manager.make_payment_intent()
             order.payment_intent_id = intent.id
-            order.fees = payment_info['price'] * artist.profile.platform_fees
+            order.fees = payment_info['price'] * artist.profile.platform_fees / 100
             order.net = order.price - order.fees
             order.save()
         except stripe.error.StripeError as e:
