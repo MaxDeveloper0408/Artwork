@@ -543,9 +543,11 @@ ul {
 .artwork-data-table-search {
   border: 2px solid $arttwork-border-secondary-color;
   border-radius: $arttwork-border-radius;
+  flex-wrap: nowrap;
+  width: auto;
 
   input {
-    flex: 1;
+    max-width: 10rem;
     outline: none;
     border: none;
     padding: .875rem;
@@ -580,7 +582,7 @@ ul {
 		position: absolute;
 		top: 0;
 		left: 0;
-		bottom: 56px;
+		bottom: 0;
 		right: 0;
 		background: rgba(0, 0, 0, 0.05);
 		z-index: 1;
