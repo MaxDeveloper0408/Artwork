@@ -1,3 +1,5 @@
+from datetime import datetime
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from Aartcy.utils import unique_slug
@@ -59,7 +61,7 @@ class Product(BaseModel):
     height = models.FloatField(default=0)
     weight = models.FloatField(default=0)
     notes = models.TextField(blank=True, null=True)
-    link = models.URLField()
+    link = models.URLField(default=settings.DOMAIN)
     deleted = models.SmallIntegerField(default=0)
 
     def __str__(self):
@@ -97,7 +99,7 @@ class Order(BaseModel):
     tags = models.ManyToManyField(Tag, blank=True)
     by = models.CharField(max_length=1, choices=by_options, default='O')
     status = models.CharField(max_length=1, choices=order_status, default='I', blank=True)
-    time = models.DateTimeField(null=True)
+    time = models.DateTimeField(default=datetime.now())
     payment_intent_id = models.CharField(max_length=32, blank=True)
 
     objects = OrderQuerySet.as_manager()
