@@ -22,7 +22,7 @@ class Stripe:
 
     def oauth_link(self):
         url = f'https://connect.stripe.com/express/oauth/authorize?response_type=code&' \
-            f'client_id={settings.STRIPE_CLIENT_ID}&scope=read_write'
+            f'client_id={settings.STRIPE_CLIENT_ID}&scope=read_write&suggested_capabilities[]=transfers&suggested_capabilities[]=card_payments'
         return url
 
     def connect_account(self):
@@ -113,3 +113,6 @@ class Stripe:
         except:
             # traceback.print_exc()
             return 'I'
+
+    def get_capabilities(self):
+        return self.stripe.Account.list_capabilities(self.account_id)
