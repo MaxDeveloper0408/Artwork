@@ -155,7 +155,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     "DATE_INPUT_FORMATS": ["%m/%d/%Y"],
-    "DATETIME_FORMAT": "%m/%d/%Y %I:%M %p",
+    "DATETIME_FORMAT": "%m/%d/%Y %I:%M:%S %p" + " " + TIME_ZONE,
 }
 
 # Email Settings
