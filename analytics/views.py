@@ -177,8 +177,8 @@ class Charges(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     pagination_class.default_limit = 10
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['product__name']
-    ordering_fields = ['time', 'price', 'fees', 'net']
+    search_fields = ['product__name', 'price']
+    ordering_fields = ['product__name', 'time', 'price']
 
     def get_queryset(self):
         stripe = Stripe()

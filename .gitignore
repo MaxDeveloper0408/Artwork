@@ -1,7 +1,11 @@
 .idea/
 .vscode/
 *.pyc
+media/
 #v Created by https://www.gitignore.io
+
+# Migration Files
+*/migrations/
 
 ### OSX ###
 .DS_Store
