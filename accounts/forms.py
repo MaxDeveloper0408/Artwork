@@ -28,7 +28,7 @@ class SignupForm(UserCreationForm):
 class AddressForm(ModelForm):
     class Meta:
         model = Address
-        fields = ['city', 'state', 'country', 'address_line1', 'address_line2']
+        fields = ['city', 'state', 'country', 'zip_code', 'address_line1', 'address_line2']
 
 
 class CreditCardForm(ModelForm):

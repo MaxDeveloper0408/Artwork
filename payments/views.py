@@ -2,6 +2,8 @@ import json
 from datetime import datetime
 
 import stripe
+
+from Aartcy.utils.extras import generate_username
 from .stripe_gateway import Stripe
 from django.http import JsonResponse
 from rest_framework.views import APIView
@@ -85,23 +87,24 @@ class PaymentIntent(APIView):
             return Response(APIResponse.error(message='The product does not exist', code=-3001), status=404)
 
         email = payment_info.get('email')
+        username = generate_username(payment_info.get('first_name'), payment_info.get('last_name'))
         signup_data = {
-            'username': payment_info.get('name').lower(),
+            'username': username,
             'password1': 'initial password',
             'password2': 'initial password',
             'email': email,
         }
         address_data = {
             'city': payment_info.get('city'),
-            # 'zip_code': payment_info.get('postCode'),
-            'zip_code': ' ',
+            'zip_code': payment_info.get('zip'),
+            # 'zip_code': ' ',
             'state': payment_info.get('state'),
             'country': payment_info.get('country'),
             'address_line1': payment_info.get('addressLine1'),
             'address_line2': payment_info.get('addressLine2'),
         }
 
-        activation_secret = auth.makesecret(payment_info.get('name').lower())
+        activation_secret = auth.makesecret(username.lower())
         profile_data = {
             'role': 4,
             'phone': payment_info.get('phone'),
@@ -155,6 +158,9 @@ class PaymentIntent(APIView):
                 return Response(APIResponse.error('Invalid order information', code=-3002), status=201)
 
             collector = signup_form.save()  # at this point, the relation table(OneToOne, OneToMany Models created)
+            collector.first_name = payment_info.get('first_name')
+            collector.last_name = payment_info.get('last_name')
+            collector.save()
 
             address = address_form.save(commit=False)
             address.user = collector
